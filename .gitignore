@@ -5,4 +5,6 @@ __pycache__
 #caching files ignore
 
 .DS_Store
+#Dont need this file, just a mac file
 
+OpenAiKey.py
