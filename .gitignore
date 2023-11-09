@@ -1,0 +1,6 @@
+.venv
+# venv files not needed for git
+
+__pycache__
+#caching files ignore
+
