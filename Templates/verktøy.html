@@ -1,0 +1,16 @@
+
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1> Demo støtteverktøy </h1>
+
+    <style>
+        h1{margin: 30px}
+    </style>
+    <div>
+        <img src="{{url_for('static', filename='ChatGPT_logo.png')}}" align="middle" />
+        <img src="{{url_for('static', filename='WatsonLogo.png')}}" align="middle" />
+    </div>
+{% include 'textfield.html' %}
+{% endblock %}
+

@@ -1,0 +1,21 @@
+
+#myButton{
+    background-color: rgba(26, 25, 25, 0.831); /* Green background */
+    color: white; /* White text */
+    padding: 10px 28px; /* Top and bottom padding of 15px, left and right of 32px */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* No underline */
+    display: inline-block; /* Inline-block display */
+    font-size: 16px; /* Font size */
+    margin: 4px 2px; /* Margin around the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 8px; /* Rounded corners */
+}
+
+
+body{
+
+    background-color: rgba(236, 228, 228, 0.232);
+
+}
+

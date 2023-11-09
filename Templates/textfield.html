@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8"> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <style>
+		textarea {
+			resize: none;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+		}
+        input{margin: 10px;}
+	</style>
+
+    <link rel="stylesheet" href="/static/styles.css">
+
+</head> 
+<body> 
+    <h2> Input:</h2>
+	<form method="POST" id="myForm"> 
+		<textarea 
+                rows="5"
+				cols="50"
+                name="textarea"></textarea> 
+		<input type="submit" value="Generer" id="myButton"> 
+	</form> 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var textarea = document.querySelector('#myForm textarea');
+            textarea.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent the default line break in textarea
+                    document.getElementById('myForm').submit();
+                }
+            });
+        });
+    </script>
+
+    {% if result %}
+    <h4> Output: </h4>
+    <div class="result" > {{ result }} </div>
+    {% endif %} 
+
+</body> 
+</html>
+
+
