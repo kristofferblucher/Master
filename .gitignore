@@ -8,3 +8,5 @@ __pycache__
 #Dont need this file, just a mac file
 
 OpenAiKey.py
+#Removing commit for API key file, avoiding leaking of API-keys
+
