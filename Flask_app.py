@@ -18,16 +18,18 @@ def støtteverktøy():
     if request.method == 'POST': 
         # Retrieve the text from the textarea 
         text = request.form.get('textarea') 
-        response = ai.Completion.create(
-        engine='text-davinci-003',  # Determines the quality, speed, and cost.
-        temperature=0.5,            # Level of creativity in the response
-        prompt=text,                # What the user typed in
-        max_tokens=100,              # Maximum tokens in the prompt AND response
-        n=1,                        # The number of completions to generate
-        stop=None,                  # An optional setting to control response generation
+        response = ai.chat.completions.create(
+        model='gpt-4',  # Determines the quality, speed, and cost.
+        messages=[{"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": text}
+            ]
+        
         )
 
-        result = response.choices[0].text
+        print(response)
+
+        result = response.choices[0].message.content
+
         print(text) 
         print(result)
         return redirect(url_for("støtteverktøy", result=result))
@@ -35,9 +37,11 @@ def støtteverktøy():
     result = request.args.get("result")
     return render_template('verktøy.html',title="Støtteverktøy",result=result)
 
+
 if __name__ == '__main__':
     app.run(debug=True)
-    
-    
+
+
+
 
 
