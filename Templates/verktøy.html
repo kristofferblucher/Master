@@ -7,10 +7,24 @@
     <style>
         h1{margin: 30px}
     </style>
-    <div>
+
+    <link rel="stylesheet" href="/static/styles.css">
+    <!-- <div>
         <img src="{{url_for('static', filename='ChatGPT_logo.png')}}" align="middle" />
         <img src="{{url_for('static', filename='WatsonLogo.png')}}" align="middle" />
-    </div>
-{% include 'textfield.html' %}
+    </div -->
+
+    <form method = "POST" action="/verktøy" id="temaValg">
+        Velg ett av temaene: 
+        <br> <br> <br>
+       Doping i sport <input type="checkbox" value="Doping i sport" name="mycheckBox">
+      <br> Abort <input type="checkbox" value= "Abort" name="mycheckBox">
+       <br> Privatisering av sykehus <input type="checkbox" value="Privatisering av sykehus" name="mycheckBox">
+       <br> <br> <input type="submit">
+
+    </form>
+
+<!-- {% include 'textfield.html' %} -->
 {% endblock %}
+
 
