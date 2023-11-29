@@ -25,10 +25,11 @@ def støtteverktøy():
             ]
         
         )
-
         print(response)
 
         result = response.choices[0].message.content
+
+        
 
         print(text) 
         print(result)
