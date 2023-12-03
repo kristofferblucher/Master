@@ -40,7 +40,7 @@ def setninger():
     session['generated_article'] = None
 
     sentences = ("Doping has caused a lot of controversy in sports, because it is illegal.", 
-                     "In competitive sports, doping is the use of banned athletic performance-enhancing drugs by athletic competitors, as a way of cheating.",
+                     "In competitive sports, doping is the use of banned athletic performance-enhancing drugs by athletes, and it is seen as a way of cheating.",
                      "Lance Armstrong is a well known doping-case, which caused a lot of controversy and uproar",
                      "Some people actually thinks doping should be allowed in sport, because they feel that would make it a level playing-field for everyone")
         
@@ -70,8 +70,6 @@ def artikkel():
             session['generated_article'] = generated_article
     
     return render_template('artikkel.html', generated_article=generated_article)
-
-
 
 
 
