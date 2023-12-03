@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from OpenAiKey import OPENAI_API_KEY
 import openai 
-from funksjoner import translate_to_norwegian
-from funksjoner import generate_article
+from funksjoner import translate_to_norwegian, generate_article, translate_to_english
 from debater_python_api.api.debater_api import DebaterApi
 from DebaterApi_key import DebaterApiKey
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -49,6 +48,7 @@ def setninger():
 
     if request.method == 'POST':
         selected_sentences = request.form.getlist('sentence')
+       # print(selected_sentences)
         session['selected_sentences'] = selected_sentences
         return redirect(url_for('artikkel'))
         # Process selected sentences as needed
