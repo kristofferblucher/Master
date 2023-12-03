@@ -1,15 +1,37 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1> Hvilke setninger ønsker du å bruke? </h1>
+    <h1> Her er noen nyttige setninger til ditt valgte tema. <br>
+        Hvilke setninger ønsker du å bruke? <br> <br> 
+    </h1>
+    
 
     <style>
-        h1{margin: 30px}
+        h1{margin: 25px; font-size: 35px;}
     </style>
-    <!-- <div>
-        <img src="{{url_for('static', filename='ChatGPT_logo.png')}}" align="middle" />
-        <img src="{{url_for('static', filename='WatsonLogo.png')}}" align="middle" />
-    </div -->
+   
+   <form method="post">
+    {% for sentence in norske_setninger %}
+    <label>
+        {{ sentence }}
+        <input type="checkbox" name="sentence" value="{{ sentence }}">
+    </label><br>
 
-<!-- {% include 'textfield.html' %} -->
+    {% endfor %}
+
+    <br>
+
+    <input type="submit" value="Bekreft valg">
+</form>
+ <br>
+    {% if selected_sentences %}
+        <h2>Valgte Setninger:</h2>
+        <ul>
+            {% for sentence in selected_sentences %}
+                <li>{{ sentence }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
 {% endblock %}
+

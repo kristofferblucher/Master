@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h1> Vipps, så var den klar! Her er din genererte artikkel:<br> <br> 
+    </h1>
+    
+
+    <style>
+        h1{margin: 25px; font-size: 35px;}
+        .article-content {
+            white-space: pre-line; /* Bevarer hvite mellomrom og linjeskift */
+        }
+    
+    </style>
+   
+   {% if generated_article %}
+        <div class="article-content">{{ generated_article }}</div>
+    {% else %}
+        <p>Ingen setninger valgt.</p>
+    {% endif %}
+
+{% endblock %}
+
