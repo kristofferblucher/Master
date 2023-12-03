@@ -41,7 +41,8 @@ def setninger():
 
     sentences = ("Doping has caused a lot of controversy in sports, because it is illegal.", 
                      "In competitive sports, doping is the use of banned athletic performance-enhancing drugs by athletic competitors, as a way of cheating.",
-                     "Lance Armstrong is a well known doping-case, which caused a lot of controversy and uproar")
+                     "Lance Armstrong is a well known doping-case, which caused a lot of controversy and uproar",
+                     "Some people actually thinks doping should be allowed in sport, because they feel that would make it a level playing-field for everyone")
         
     norske_setninger = [translate_to_norwegian(sentence) for sentence in sentences]
     selected_sentences= []

@@ -2,14 +2,14 @@
 
 {% block content %}
     <h1> Her er noen nyttige setninger til ditt valgte tema. <br>
-        Hvilke setninger ønsker du å bruke? <br> <br> 
+        Velg én eller flere setninger du ønsker å bruke. <br> <br> 
     </h1>
     
 
     <style>
         h1{margin: 25px; font-size: 35px;}
     </style>
-   
+   <link rel="stylesheet" href="/static/styles.css">
    <form method="post">
     {% for sentence in norske_setninger %}
     <label>
@@ -21,7 +21,7 @@
 
     <br>
 
-    <input type="submit" value="Bekreft valg">
+    <input type="submit" value="Bekreft valg" id="myButton">
 </form>
  <br>
     {% if selected_sentences %}
