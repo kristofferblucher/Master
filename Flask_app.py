@@ -49,9 +49,15 @@ def setninger():
 
     if request.method == 'POST':
         selected_sentences = request.form.getlist('sentence')
-       # print(selected_sentences)
-        session['selected_sentences'] = selected_sentences
-        return redirect(url_for('artikkel'))
+        
+        if selected_sentences:
+            session['selected_sentences'] = selected_sentences
+            return redirect(url_for('artikkel'))
+        
+        else:
+            selected_sentences = tema
+            session['selected_sentences'] = selected_sentences
+            return redirect(url_for('artikkel'))
         # Process selected sentences as needed
 
 
