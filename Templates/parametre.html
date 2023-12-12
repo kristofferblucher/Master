@@ -25,12 +25,12 @@
         <img src="{{url_for('static', filename='WatsonLogo.png')}}" align="middle" />
     </div -->
 
-    <form method = "POST" action="/verktøy" id="temaValg">
-        <h3>Hvilket tema vil du ha?</h3> 
+    <form method = "POST" id="temaValg">
+        <h3>Hvor mange ord skal teksten være?</h3> 
         <br> 
         <textarea 
-                rows="2"
-				cols="25"
+                rows="1"
+				cols="7"
                 name="textarea"></textarea> 
 		<input type="submit" value="Generer" id="myButton"> 
     </form>
@@ -48,7 +48,3 @@
 
 
 {% endblock %}
-
-
-
-

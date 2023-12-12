@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from OpenAiKey import OPENAI_API_KEY
 import openai 
-from funksjoner import translate_to_norwegian, generate_article, translate_to_english
+from funksjoner import translate_to_norwegian, generate_article, translate_to_english, get_pro_con_scores, translate_tuple_norwegian
 from debater_python_api.api.debater_api import DebaterApi
 from DebaterApi_key import DebaterApiKey
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -27,11 +27,27 @@ def startside():
 @app.route('/verktøy',methods=['GET', 'POST'])
 def støtteverktøy():
     global tema
-    if request.method=='POST':
-        print(request.form.get("mycheckBox"))
-        tema = request.form.get("mycheckBox")
-        return redirect(url_for('setninger'))
-    return render_template('verktøy.html')
+    if request.method == 'POST':
+        tema = request.form.get('textarea') 
+        response = openai.chat.completions.create(
+        model='gpt-4',  # Determines the quality, speed, and cost.
+        messages=[{"role": "system", "content": "You are a sentence generator. List arguments or evidence for or against the subject you are given by the user. List strictly only the sentences, with no additional information. Maximum 4 sentences."},
+             {"role": "user", "content": tema}])
+    
+        print(response)
+        result = response.choices[0].message.content
+        print(result)
+        result = get_pro_con_scores(result, tema)
+        result = translate_tuple_norwegian(result)
+        for sentence, score in result:
+            print(f"Setning: {sentence}, Score: {score}")
+        
+        session['norske_setninger'] = result
+
+        return redirect(url_for("setninger"))
+
+    return render_template('verktøy.html',title="støtteverktøy")
+
 
 #Her skal egentlig debater generere setningene inni "sentences"-listen, basert på valgt tema fra forrige side
 @app.route('/verktøy/setninger',methods=['GET', 'POST'])
@@ -39,12 +55,9 @@ def setninger():
 
     session['generated_article'] = None
 
-    sentences = ("Doping has caused a lot of controversy in sports, because it is illegal.", 
-                     "In competitive sports, doping is the use of banned athletic performance-enhancing drugs by athletes, and it is seen as a way of cheating.",
-                     "Lance Armstrong is a well known doping-case, which caused a lot of controversy and uproar",
-                     "Some people actually thinks doping should be allowed in sport, because they feel that would make it a level playing-field for everyone")
+    norske_setninger = session.get('norske_setninger', [])
+    norske_setninger_med_score = [(sentence, score) for sentence, score in norske_setninger]
         
-    norske_setninger = [translate_to_norwegian(sentence) for sentence in sentences]
     selected_sentences= []
 
     if request.method == 'POST':
@@ -52,16 +65,27 @@ def setninger():
         
         if selected_sentences:
             session['selected_sentences'] = selected_sentences
-            return redirect(url_for('artikkel'))
+            return redirect(url_for('parametre'))
         
         else:
             selected_sentences = tema
             session['selected_sentences'] = selected_sentences
-            return redirect(url_for('artikkel'))
+            return redirect(url_for('parametre'))
         # Process selected sentences as needed
 
 
-    return render_template('setninger.html', norske_setninger=norske_setninger, selected_sentences=selected_sentences)
+    return render_template('setninger.html', norske_setninger_med_score=norske_setninger_med_score, selected_sentences=selected_sentences)
+
+#Parametre (litt flere valg for brukeren)
+@app.route('/verktøy/setninger/artikkel/parametre', methods=['GET','POST'])
+def parametre():
+    global antall_ord
+    if request.method == 'POST':
+        antall_ord = request.form.get('textarea')
+        return redirect(url_for('artikkel'))
+
+
+    return render_template('parametre.html')
 
 #Artikkel og resultat-side
 @app.route('/verktøy/setninger/artikkel', methods=['GET'])
@@ -72,7 +96,7 @@ def artikkel():
 
     if not generated_article or request.method == 'POST':
         if selected_sentences:
-            generated_article = generate_article(selected_sentences)
+            generated_article = generate_article(selected_sentences,word_count=antall_ord)
             session['generated_article'] = generated_article
     
     return render_template('artikkel.html', generated_article=generated_article)

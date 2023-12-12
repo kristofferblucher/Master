@@ -11,9 +11,9 @@
     </style>
    <link rel="stylesheet" href="/static/styles.css">
    <form method="post">
-    {% for sentence in norske_setninger %}
+    {% for sentence, score in norske_setninger_med_score %}
     <label>
-        {{ sentence }}
+        {{ sentence }}    Pro/Con-Score: {{score}}
         <input type="checkbox" name="sentence" value="{{ sentence }}">
     </label><br>
 
