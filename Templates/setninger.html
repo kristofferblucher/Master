@@ -13,8 +13,8 @@
    <form method="post">
     {% for sentence, score in norske_setninger_med_score %}
     <label>
-        {{ sentence }}    Pro/Con-Score: {{score}}
-        <input type="checkbox" name="sentence" value="{{ sentence }}">
+        {{ sentence }}    Evidence-Score: {{score}}
+        <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}">
     </label><br>
 
     {% endfor %}

@@ -69,7 +69,7 @@ def generate_article(chosen_sentences, word_count=300):
         print(f"An error occurred: {e}")
         return None
 
-def get_pro_con_scores(arguments_string, topic):
+def get_evidence_scores(arguments_string, topic):
     # Initialize the Debater API
     api_key = DebaterApiKey  # Ensure this is your valid API key
     debater_api = DebaterApi(api_key)
@@ -84,12 +84,12 @@ def get_pro_con_scores(arguments_string, topic):
 
     try:
         # Get pro/con scores
-        pro_con_scores = debater_api.get_pro_con_client().run(sentence_topic_dicts)
+        evidence_scores = debater_api.get_evidence_detection_client().run(sentence_topic_dicts)
 
         # Process and return the results
         results = []
-        for sentence, pro_con_score in zip(sentence_topic_dicts, pro_con_scores):
-            results.append((sentence['sentence'], round(pro_con_score, 3)))
+        for sentence, evidence_scores in zip(sentence_topic_dicts, evidence_scores):
+            results.append((sentence['sentence'], round(evidence_scores, 3)))
         return results
 
     except Exception as e:
@@ -116,3 +116,21 @@ def translate_tuple_norwegian(english_sentences_with_scores):
             translated_sentences_with_scores.append((english_text, score))  # Keep original text on error
 
     return translated_sentences_with_scores
+
+def wiki_sentences(theme):
+
+    system_prompt = "Generate two argumentative sentences about the theme which is given to you as the input from user "
+
+    response = openai.chat.completions.create(
+            model="gpt-4",  # valgte gpt modellen
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": theme}
+            ]
+
+        )
+    
+    sentences = response.choices[0].message.content
+    sentences = sentences.split('\n')
+    sentences = [sentence.lstrip('0123456789). ') for sentence in sentences]
+    return sentences

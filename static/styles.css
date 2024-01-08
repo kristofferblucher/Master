@@ -8,10 +8,39 @@
     display: inline-block; /* Inline-block display */
     font-size: 16px; /* Font size */
     margin: 4px 2px; /* Margin around the button */
+    margin-top: 1rem;
     cursor: pointer; /* Pointer cursor on hover */
     border-radius: 8px; /* Rounded corners */
 }
 
+#myButton:hover {
+    color: rgb(60, 57, 57);
+    background-color: rgb(150, 144, 144);
+    border-radius: 8px;
+
+}
+
+#startside:hover {
+    color: rgb(60, 57, 57); /* Change the text color on hover */
+    background-color: rgb(150, 144, 144); /* Change the background color on hover */
+    border-radius: 5px;
+}
+
+#verktøy {
+    color: white
+}
+
+#verktøy:hover {
+    color: rgb(60, 57, 57);
+    background-color: rgb(150, 144, 144);
+    border-radius: 5px;
+
+}
+
+#checkbox {
+    height: 18px;
+    width: 18px;
+}
 
 body{
 
@@ -23,3 +52,4 @@ body{
     font-size: 25px
 
 }
+

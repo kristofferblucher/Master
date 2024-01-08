@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from OpenAiKey import OPENAI_API_KEY
 import openai 
-from funksjoner import translate_to_norwegian, generate_article, translate_to_english, get_pro_con_scores, translate_tuple_norwegian
+from funksjoner import translate_to_norwegian, generate_article, translate_to_english, get_evidence_scores, translate_tuple_norwegian,wiki_sentences
+from debater_funksjoner import wiki_term_extractor
 from debater_python_api.api.debater_api import DebaterApi
 from DebaterApi_key import DebaterApiKey
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -23,12 +24,16 @@ app.secret_key = 'Arsenal1886'
 def startside():
     return render_template('startside.html')
 
+
+
 #Side for å velge tema
 @app.route('/verktøy',methods=['GET', 'POST'])
 def støtteverktøy():
     global tema
     if request.method == 'POST':
         tema = request.form.get('textarea') 
+        tema = translate_to_english(tema)
+        print(tema)
         response = openai.chat.completions.create(
         model='gpt-4',  # Determines the quality, speed, and cost.
         messages=[{"role": "system", "content": "You are a sentence generator. List arguments or evidence for or against the subject you are given by the user. List strictly only the sentences, with no additional information. Maximum 4 sentences."},
@@ -37,7 +42,7 @@ def støtteverktøy():
         print(response)
         result = response.choices[0].message.content
         print(result)
-        result = get_pro_con_scores(result, tema)
+        result = get_evidence_scores(result, tema)
         result = translate_tuple_norwegian(result)
         for sentence, score in result:
             print(f"Setning: {sentence}, Score: {score}")
