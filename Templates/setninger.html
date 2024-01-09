@@ -1,37 +1,62 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1> Her er noen nyttige setninger til ditt valgte tema. <br>
-        Velg én eller flere setninger du ønsker å bruke. <br> <br> 
-    </h1>
-    
+<h1> Her er noen nyttige setninger til ditt valgte tema. <br>
+    Velg én eller flere setninger du ønsker å bruke til din artikkel. <br> <br> 
+</h1>
 
-    <style>
-        h1{margin: 25px; font-size: 35px;}
-    </style>
-   <link rel="stylesheet" href="/static/styles.css">
-   <form method="post">
-    {% for sentence, score in norske_setninger_med_score %}
-    <label>
-        {{ sentence }}    Evidence-Score: {{score}}
-        <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}">
-    </label><br>
-
-    {% endfor %}
+<link rel="stylesheet" href="/static/styles.css">
+<form method="post">
+    <div class="sentences-container">
+        {% for sentence, score in norske_setninger_med_score %}
+            <div class="sentence">
+                <span class="sentence-text">{{ sentence }}</span>
+                <span class="score">Evidence-Score: {{ score }}</span>
+                <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}" class="sentence-checkbox">
+            </div>
+        {% endfor %}
+    </div>
 
     <br>
 
-    <input type="submit" value="Bekreft valg" id="myButton">
+    <input type="submit" id="myButton" value="Bekreft valg" class="myButton">
 </form>
- <br>
-    {% if selected_sentences %}
-        <h2>Valgte Setninger:</h2>
-        <ul>
-            {% for sentence in selected_sentences %}
-                <li>{{ sentence }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+<br>
+{% if selected_sentences %}
+    <h2>Valgte Setninger:</h2>
+    <ul>
+        {% for sentence in selected_sentences %}
+            <li>{{ sentence }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 
+<style>
+    h1 { margin: 25px; font-size: 35px; }
+    .sentences-container { margin: 25px; }
+    .sentence { 
+        background: #f3f3f3; 
+        margin-bottom: 10px; 
+        padding: 15px; 
+        border-radius: 5px; 
+        display: flex; 
+        justify-content: space-between;
+        align-items: center; 
+    }
+    .sentence-text { flex-grow: 1; }
+    .sentence-checkbox { 
+        margin-left: 10px; 
+        width: 20px;
+        height: 20px;
+    
+    }
+    .score { 
+        white-space: nowrap; 
+        margin-left: 10px; 
+        font-size: 14px; 
+        background: #e0e0e0; 
+        padding: 3px 6px; 
+        border-radius: 4px; 
+    }
+</style>
 {% endblock %}
-

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from OpenAiKey import OPENAI_API_KEY
 import openai 
 from funksjoner import translate_to_norwegian, generate_article, translate_to_english, get_evidence_scores, translate_tuple_norwegian,wiki_sentences
-from debater_funksjoner import wiki_term_extractor
+from debater_funksjoner import wiki_term_extractor,index_searcher
 from debater_python_api.api.debater_api import DebaterApi
 from DebaterApi_key import DebaterApiKey
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -34,14 +34,11 @@ def støtteverktøy():
         tema = request.form.get('textarea') 
         tema = translate_to_english(tema)
         print(tema)
-        response = openai.chat.completions.create(
-        model='gpt-4',  # Determines the quality, speed, and cost.
-        messages=[{"role": "system", "content": "You are a sentence generator. List arguments or evidence for or against the subject you are given by the user. List strictly only the sentences, with no additional information. Maximum 4 sentences."},
-             {"role": "user", "content": tema}])
-    
-        print(response)
-        result = response.choices[0].message.content
-        print(result)
+        #setninger = wiki_sentences(tema)
+        wiki_terms = wiki_term_extractor([tema])
+        print(wiki_terms)
+        result = index_searcher(wiki_terms,tema)
+        print("Her kommer indeksen:",result)
         result = get_evidence_scores(result, tema)
         result = translate_tuple_norwegian(result)
         for sentence, score in result:
@@ -76,7 +73,7 @@ def setninger():
             selected_sentences = tema
             session['selected_sentences'] = selected_sentences
             return redirect(url_for('parametre'))
-        # Process selected sentences as needed
+        # Prosesser valgte setninger
 
 
     return render_template('setninger.html', norske_setninger_med_score=norske_setninger_med_score, selected_sentences=selected_sentences)
@@ -106,48 +103,6 @@ def artikkel():
     
     return render_template('artikkel.html', generated_article=generated_article)
 
-
-
-
-#Debater setninger
-# if tema == "Doping i sport":
-        #     query.add_concept_element(['Doping','Doping in sport'])   
-        #     query.add_normalized_element(['steroids', 'football','testostorone'])   
-        #     query.add_type_element(['Sentiment'])   
-        #     query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=8, sentenceLength=(7, 60))   
-        #     sentences = index_searcher_client.run(query_request)
-        #     for sentence in sentences:
-        #         print(sentence) 
-        # if tema == "Abort":
-        #     query.add_concept_element(['Abortion','Abortion debate'])   
-        #     query.add_normalized_element(['controversy', 'kids','debate'])   
-        #     query.add_type_element(['Sentiment'])   
-        #     query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=8, sentenceLength=(7, 60))   
-        #     sentences = index_searcher_client.run(query_request)
-        #     for sentence in sentences:
-        #         print(sentence)
-
-
-#ChatGPT
-#     if request.method == 'POST': 
-#         # Retrieve the text from the textarea 
-#         text = request.form.get('textarea') 
-#         response = ai.chat.completions.create(
-#         model='gpt-4',  # Determines the quality, speed, and cost.
-#         messages=[{"role": "system", "content": "You are a helpful assistant."},
-#             {"role": "user", "content": text}
-#             ]
-        
-#         )
-#         print(response)
-#         result = response.choices[0].message.content
-#         print(text) 
-#         print(result)
-#         return redirect(url_for("støtteverktøy", result=result))
-
-#     result = request.args.get("result")
-
-#     return render_template('verktøy.html',title="Støtteverktøy",result=result)
 
 
 if __name__ == '__main__':

@@ -1,8 +1,13 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1> Vipps, så var den klar! Her er din genererte artikkel:<br> <br> 
+    <h1> Vipps, så var den klar! 
     </h1>
+    <h5> Du kan redigere artikkelen ved å klikke deg inn i teksten. </h5>
+    <br> <br>
+    <h5> Generert artikkel: </h5>
+
+    <br>
     
 
     <style>
@@ -16,7 +21,7 @@
     <link rel="stylesheet" href="/static/styles.css">
    
    {% if generated_article %}
-        <div class="article-content">{{ generated_article }}</div>
+        <div contenteditable="true" class="article-content">{{ generated_article }}</div>
         <br> <br> <br>
     {% else %}
         <p>Ingen setninger valgt.</p>

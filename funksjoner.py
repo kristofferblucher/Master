@@ -69,21 +69,21 @@ def generate_article(chosen_sentences, word_count=300):
         print(f"An error occurred: {e}")
         return None
 
-def get_evidence_scores(arguments_string, topic):
+def get_evidence_scores(arguments_list, topic):
     # Initialize the Debater API
     api_key = DebaterApiKey  # Ensure this is your valid API key
     debater_api = DebaterApi(api_key)
 
     # Split the string into individual sentences
     # Assuming each argument starts with a number and a dot (e.g., "1. Argument")
-    sentences = re.findall(r'\d+\.\s+(.+)', arguments_string)
+    #sentences = re.findall(r'\d+\.\s+(.+)', arguments_string)
 
 
-    # Prepare the data for the Debater API
-    sentence_topic_dicts = [{'sentence': sentence, 'topic': topic} for sentence in sentences]
+    # Klargjør data til Debater API
+    sentence_topic_dicts = [{'sentence': sentence, 'topic': topic} for sentence in arguments_list]
 
     try:
-        # Get pro/con scores
+        # Hent evidence scores
         evidence_scores = debater_api.get_evidence_detection_client().run(sentence_topic_dicts)
 
         # Process and return the results
@@ -119,7 +119,7 @@ def translate_tuple_norwegian(english_sentences_with_scores):
 
 def wiki_sentences(theme):
 
-    system_prompt = "Generate two argumentative sentences about the theme which is given to you as the input from user "
+    system_prompt = "Generate one argumentative sentence about the theme which is given to you as a input from user. Use maximum 1 words in the sentence. "
 
     response = openai.chat.completions.create(
             model="gpt-4",  # valgte gpt modellen
