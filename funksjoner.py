@@ -42,7 +42,7 @@ def translate_to_norwegian(english_text):
 
 
 #Function for generating article
-def generate_article(chosen_sentences, word_count=300):
+def generate_article(chosen_sentences,user_input, word_count=300):
     try:
 
         if isinstance(chosen_sentences, list):
@@ -57,14 +57,15 @@ def generate_article(chosen_sentences, word_count=300):
             model="gpt-4",  # valgte gpt modellen
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": chosen_sentences}
+                {"role": "user", "content": chosen_sentences},
+                {"role": "user","content": user_input}
             ]
 
         )
 
-        article = response.choices[0].message.content
-        article = translate_to_norwegian(article)
-        return article
+        article_english = response.choices[0].message.content
+        
+        return article_english
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
@@ -89,7 +90,7 @@ def get_evidence_scores(arguments_list, topic):
         # Process and return the results
         results = []
         for sentence, evidence_scores in zip(sentence_topic_dicts, evidence_scores):
-            results.append((sentence['sentence'], round(evidence_scores, 3)))
+            results.append((sentence['sentence'], round(evidence_scores, 2)))
         return results
 
     except Exception as e:

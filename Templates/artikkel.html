@@ -19,14 +19,39 @@
 
     </style>
     <link rel="stylesheet" href="/static/styles.css">
-   
+
+    <button id="button-vis-engelsk" class="myButton" onclick="toggleLanguage()"> Vis engelsk versjon</button> 
+
+
+
    {% if generated_article %}
-        <div contenteditable="true" class="article-content">{{ generated_article }}</div>
+        <div id= 'article-no' contenteditable="true" class="article-content">{{ generated_article }}</div>
+        <div id="article-en" contenteditable="true" class="article-content" style="display:none;">
+            {{ generated_article_en}} </div>
+    
         <br> <br> <br>
     {% else %}
         <p>Ingen setninger valgt.</p>
     {% endif %}
 
+    <script>
+        function toggleLanguage() {
+            var en = document.getElementById('article-en');
+            var no = document.getElementById('article-no');
+            var button = document.getElementById('button-vis-engelsk')
+
+            if (en.style.display === "none") {
+                en.style.display = "block";
+                no.style.display = "none";
+                button.textContent = "Vis norsk versjon";
+            } else {
+                en.style.display = "none";
+                no.style.display = "block";
+                button.textContent = "Vis engelsk versjon";
+            }
+        }
+        </script>
     
 {% endblock %}
+
 

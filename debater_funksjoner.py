@@ -7,6 +7,24 @@ from funksjoner import wiki_sentences
 
 debater_api = DebaterApi(DebaterApiKey)
 
+def get_argument_scores(arguments_list, topic):
+     # Klargjør data til Debater API
+    sentence_topic_dicts = [{'sentence': sentence, 'topic': topic} for sentence in arguments_list]
+
+    try:
+        # Hent evidence scores
+        argument_quality_score = debater_api.get_argument_quality_client().run(sentence_topic_dicts)
+
+        # Process and return the results
+        results = []
+        for sentence, argument_quality_score in zip(sentence_topic_dicts, argument_quality_score):
+            results.append((sentence['sentence'], round(argument_quality_score, 2)))
+        return results
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+
 
 #Extracting wikified titles
 
@@ -36,7 +54,7 @@ def index_searcher(dc,topic):
     #Query 1
     query = SimpleQuery(is_ordered=True, window_size=1)
     query.add_concept_element(dc)
-    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(7, 100))
+    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(9, 100))
     result = searcher.run(query_request)
     candidates.update(result)
 
@@ -44,21 +62,21 @@ def index_searcher(dc,topic):
     query = SimpleQuery(is_ordered=True, window_size=12)
     query.add_normalized_element(['that'])
     query.add_concept_element(dc)
-    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(7, 60))
+    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(9, 60))
     candidates.update(searcher.run(query_request))
 
     #Query 3
     query = SimpleQuery(is_ordered=True, window_size=12)
     query.add_concept_element(dc)
     query.add_type_element(['Causality'])
-    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(7, 60))
+    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(9, 60))
     candidates.update(searcher.run(query_request))
 
     #Query 4
     query = SimpleQuery(is_ordered=False, window_size=7)
     query.add_concept_element(dc)
     query.add_type_element(['Causality', 'Sentiment'])
-    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(7, 60))
+    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(9, 60))
     candidates.update(searcher.run(query_request))
 
     #Query 5
@@ -68,7 +86,7 @@ def index_searcher(dc,topic):
                                   'surveys', 'analyses', 'reports', 'research', 'survey'])
     query.add_normalized_element(['that'])
     query.add_concept_element(dc)
-    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(7, 60))
+    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(9, 60))
     candidates.update(searcher.run(query_request))
 
     #Query 6
@@ -80,7 +98,7 @@ def index_searcher(dc,topic):
     query.add_normalized_element(['that'])
     query.add_concept_element(dc)
     query.add_type_element(['Causality'])
-    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(7, 60))
+    query_request = SentenceQueryRequest(query=query.get_sentence_query(), size=query_size, sentenceLength=(9, 60))
     candidates.update(searcher.run(query_request))
 
     candidates_list = list(candidates)
@@ -96,6 +114,7 @@ def index_searcher(dc,topic):
     return evidences
 
 
+     
 
 
 #Test the queries, with doping in sport as an example topic:

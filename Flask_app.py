@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from OpenAiKey import OPENAI_API_KEY
 import openai 
-from funksjoner import translate_to_norwegian, generate_article, translate_to_english, get_evidence_scores, translate_tuple_norwegian,wiki_sentences
-from debater_funksjoner import wiki_term_extractor,index_searcher
+from funksjoner import generate_article, translate_to_english, get_evidence_scores, translate_tuple_norwegian, translate_to_norwegian
+from debater_funksjoner import wiki_term_extractor,index_searcher, get_argument_scores
 from debater_python_api.api.debater_api import DebaterApi
 from DebaterApi_key import DebaterApiKey
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -39,8 +39,9 @@ def støtteverktøy():
         print(wiki_terms)
         result = index_searcher(wiki_terms,tema)
         print("Her kommer indeksen:",result)
-        result = get_evidence_scores(result, tema)
+        result = get_argument_scores(result, tema)
         result = translate_tuple_norwegian(result)
+        session.clear()
         for sentence, score in result:
             print(f"Setning: {sentence}, Score: {score}")
         
@@ -67,6 +68,33 @@ def setninger():
         
         if selected_sentences:
             session['selected_sentences'] = selected_sentences
+            return redirect(url_for('bruker_input'))
+        
+        else:
+            selected_sentences = tema
+            session['selected_sentences'] = selected_sentences
+            return redirect(url_for('bruker_input'))
+        # Prosesser valgte setninger
+
+
+    return render_template('setninger.html', norske_setninger_med_score=norske_setninger_med_score, selected_sentences=selected_sentences)
+
+@app.route('/verktøy/setninger/brukerinput', methods=['GET','POST'])
+def bruker_input():
+    global user_input
+    if request.method == 'POST':
+        sentences = request.form.get('textarea')
+        user_input = translate_to_english(sentences)
+        return redirect(url_for('parametre'))
+
+    return render_template('bruker_input.html',title="brukerinput")
+
+def sekvens():
+    if request.method == 'POST':
+        selected_sentences = request.form.getlist('sentence')
+        
+        if selected_sentences:
+            session['selected_sentences'] = selected_sentences
             return redirect(url_for('parametre'))
         
         else:
@@ -75,8 +103,9 @@ def setninger():
             return redirect(url_for('parametre'))
         # Prosesser valgte setninger
 
+    return render_template('sekvens.html',title="sekvens")
+    
 
-    return render_template('setninger.html', norske_setninger_med_score=norske_setninger_med_score, selected_sentences=selected_sentences)
 
 #Parametre (litt flere valg for brukeren)
 @app.route('/verktøy/setninger/artikkel/parametre', methods=['GET','POST'])
@@ -92,16 +121,18 @@ def parametre():
 #Artikkel og resultat-side
 @app.route('/verktøy/setninger/artikkel', methods=['GET'])
 def artikkel():
+    
     selected_sentences = session.get('selected_sentences', [])
     generated_article = session.get('generated_article', None)
 
 
     if not generated_article or request.method == 'POST':
         if selected_sentences:
-            generated_article = generate_article(selected_sentences,word_count=antall_ord)
-            session['generated_article'] = generated_article
+            generated_article = generate_article(selected_sentences,user_input,word_count=antall_ord)
+            session['generated_article_en'] = generated_article
+            session['generated_article_no'] = translate_to_norwegian(generated_article)
     
-    return render_template('artikkel.html', generated_article=generated_article)
+    return render_template('artikkel.html', generated_article=session['generated_article_no'], generated_article_en=session['generated_article_en'])
 
 
 

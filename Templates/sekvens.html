@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1> Her er noen nyttige setninger til ditt valgte tema. <br>
-    Velg én eller flere setninger du ønsker å bruke til din artikkel. <br> <br> 
+<h1> Her er de setningene du har valgt.  <br>
+    Ranger og rediger etter ønske: <br> <br> 
 </h1>
 
 <link rel="stylesheet" href="/static/styles.css">
 <form method="post">
     <div class="sentences-container">
-        {% for sentence, score in norske_setninger_med_score %}
+        {% for sentence, score in sekvens_med_score %}
             <div class="sentence">
                 <span class="sentence-text">{{ sentence }}</span>
-                <span class="score">Argument-kvalitet: {{ score }}</span>
+                <span class="score">Relevanse-Score: {{ score }}</span>
                 <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}" class="sentence-checkbox">
             </div>
         {% endfor %}

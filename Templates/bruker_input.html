@@ -1,4 +1,3 @@
-
 {% extends "layout.html" %}
 
 {% block content %}
@@ -25,15 +24,16 @@
         <img src="{{url_for('static', filename='WatsonLogo.png')}}" align="middle" />
     </div -->
 
-    <form method = "POST" action="/verktøy" id="temaValg">
-        <h3>Hvilket tema ønsker du å skrive om?</h3> 
+    <form method = "POST" id="temaValg">
+        <h3>
+            Skriv én eller flere setninger som du ønsker at 
+            artikkelen <br> skal ta utgangspunkt i eller inkludere:</h3>
         <br> 
         <textarea 
-                rows="2"
-				cols="25"
+                rows="4"
+				cols="50"
                 name="textarea"></textarea> 
-		<input type="submit" value="Bekreft" id="myButton" class="myButton"> 
-        
+		<input type="submit" value="Bekreft setninger" id="myButton" class="myButton"> 
     </form>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -49,7 +49,3 @@
 
 
 {% endblock %}
-
-
-
-
