@@ -42,12 +42,13 @@ def translate_to_norwegian(english_text):
 
 
 #Function for generating article
-def generate_article(chosen_sentences,user_input, word_count=300):
+def generate_article(chosen_sentences, word_count=300):
     try:
 
         if isinstance(chosen_sentences, list):
             chosen_sentences = ' '.join(chosen_sentences)
             chosen_sentences = translate_to_english(chosen_sentences)
+            print("This is the chosen sentences:",chosen_sentences)
             
         system_prompt = f"""You are an article generator. Generate a journalistic article based on the given sentences from the user. 
         Include the sentences within the article. The article should be around {word_count} words long. Always include a title for the article as 
@@ -58,7 +59,6 @@ def generate_article(chosen_sentences,user_input, word_count=300):
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": chosen_sentences},
-                {"role": "user","content": user_input}
             ]
 
         )
@@ -118,6 +118,30 @@ def translate_tuple_norwegian(english_sentences_with_scores):
 
     return translated_sentences_with_scores
 
+def translate_list_to_english(norske_setninger):
+
+    translations_list = []
+
+    for tekst in norske_setninger:
+        try:
+            response = openai.chat.completions.create(
+                model = "gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a translation assistant. Translate from Norwegian to English."},
+                    {"role": "user", "content": tekst}
+                ]
+            )
+            
+            translation = response.choices[0].message.content
+            translations_list.append(translation)
+
+
+        except Exception as e:
+            print(f"An error occurred while translating '{tekst}': {e}")
+            translation = response.choices[0].message.contentt
+            translations_list.append(translation)
+    return translations_list
+
 def wiki_sentences(theme):
 
     system_prompt = "Generate one argumentative sentence about the theme which is given to you as a input from user. Use maximum 1 words in the sentence. "
@@ -135,3 +159,21 @@ def wiki_sentences(theme):
     sentences = sentences.split('\n')
     sentences = [sentence.lstrip('0123456789). ') for sentence in sentences]
     return sentences
+
+def split_sentences(text):
+    """
+    Takes a string containing one or more sentences and returns a list of sentences.
+    Sentences are assumed to end with '.', '!', or '?'.
+    """
+    import re
+    # Split the text into sentences based on '.', '!', or '?' followed by a space or end of string
+    sentences = re.split(r'(?<=[.!?])\s+(?=[A-Z])|(?<=[.!?])(?=[A-Z])', text)
+    # Filter out any empty strings that might result from the split operation
+    sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
+    return sentences
+
+# def sjekk_om_gyldig_ord(ord):
+#     sjekk = enchant.Dict("nb_NO")
+#     return sjekk.check(ord)
+
+

@@ -4,7 +4,9 @@ from debater_python_api.api.sentence_level_index.client.sentence_query_request i
 from debater_python_api.api.sentence_level_index.client.article_retrieval_request import ArticleRetrievalRequest
 from DebaterApi_key import DebaterApiKey
 from funksjoner import wiki_sentences
+from PyDictionary import PyDictionary
 
+dictionary=PyDictionary()
 debater_api = DebaterApi(DebaterApiKey)
 
 def get_argument_scores(arguments_list, topic):
@@ -40,16 +42,13 @@ def wiki_term_extractor(sentences):
             for annotation in annotation_array:
                 title = annotation['concept']['title']
                 wikified_titles.append(title)
-
     return wikified_titles
 
 
 
-
-def index_searcher(dc,topic):
+def index_searcher(dc,topic,query_size):
     searcher = debater_api.get_index_searcher_client()
     candidates = set()
-    query_size = 20
 
     #Query 1
     query = SimpleQuery(is_ordered=True, window_size=1)
@@ -109,12 +108,16 @@ def index_searcher(dc,topic):
 
     evidences = [candidates_list[i] for i in range(len(evidence_scores)) if evidence_scores[i] > evidence_threshold]
     print('Number of evidences: {}'.format(len(evidences)))
-
+    
+    # Check the number of evidences
+    if len(evidences) <= 3 and query_size == 20:  # Ensure this adjustment happens only once
+        print("Increasing query size due to low evidence count...")
+        return index_searcher(dc, topic, query_size=150)  # Recursively call the function with a larger query size
+        
     
     return evidences
 
 
-     
 
 
 #Test the queries, with doping in sport as an example topic:

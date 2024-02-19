@@ -9,7 +9,7 @@
 <form method="post">
     <div class="sentences-container">
         {% for sentence, score in norske_setninger_med_score %}
-            <div class="sentence">
+            <div class="sentence" draggable="true">
                 <span class="sentence-text">{{ sentence }}</span>
                 <span class="score">Argument-kvalitet: {{ score }}</span>
                 <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}" class="sentence-checkbox">
@@ -22,14 +22,6 @@
     <input type="submit" id="myButton" value="Bekreft valg" class="myButton">
 </form>
 <br>
-{% if selected_sentences %}
-    <h2>Valgte Setninger:</h2>
-    <ul>
-        {% for sentence in selected_sentences %}
-            <li>{{ sentence }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
 
 <style>
     h1 { margin: 25px; font-size: 35px; }

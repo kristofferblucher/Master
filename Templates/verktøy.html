@@ -4,6 +4,7 @@
 {% block content %}
     <h1> Demo støtteverktøy </h1>
 
+
     <style>
         h1{margin: 30px; }
 		textarea {
@@ -28,6 +29,7 @@
     <form method = "POST" action="/verktøy" id="temaValg">
         <h3>Hvilket tema ønsker du å skrive om?</h3> 
         <br> 
+    
         <textarea 
                 rows="2"
 				cols="25"
@@ -35,6 +37,18 @@
 		<input type="submit" value="Bekreft" id="myButton" class="myButton"> 
         
     </form>
+
+    <br>
+
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert" id="flash-message1">
+            {{message}}  
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button> 
+          </div>
+          {% endfor %}
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var textarea = document.querySelector('#temaValg textarea');

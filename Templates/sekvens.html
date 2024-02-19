@@ -2,17 +2,18 @@
 
 {% block content %}
 <h1> Her er de setningene du har valgt.  <br>
-    Ranger og rediger etter ønske: <br> <br> 
+    Rediger om du ønsker å endre eller fjerne noen av de: <br> <br> 
 </h1>
 
 <link rel="stylesheet" href="/static/styles.css">
 <form method="post">
     <div class="sentences-container">
         {% for sentence, score in sekvens_med_score %}
-            <div class="sentence">
-                <span class="sentence-text">{{ sentence }}</span>
-                <span class="score">Relevanse-Score: {{ score }}</span>
-                <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}" class="sentence-checkbox">
+            <div class="sentence" draggable="true">
+                <span class="sentence-text" contenteditable="true">{{ sentence }}</span>
+                <span class="score">Argument-kvalitet: {{ score }}</span>
+                <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}" class="sentence-checkbox" checked="true">
+                
             </div>
         {% endfor %}
     </div>
@@ -22,14 +23,6 @@
     <input type="submit" id="myButton" value="Bekreft valg" class="myButton">
 </form>
 <br>
-{% if selected_sentences %}
-    <h2>Valgte Setninger:</h2>
-    <ul>
-        {% for sentence in selected_sentences %}
-            <li>{{ sentence }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
 
 <style>
     h1 { margin: 25px; font-size: 35px; }
