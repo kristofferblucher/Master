@@ -1,10 +1,15 @@
 import openai
-import re
-from OpenAiKey import OPENAI_API_KEY
-from DebaterApi_key import DebaterApiKey
+import re,os
 from debater_python_api.api.debater_api import DebaterApi
 
-openai.api_key = OPENAI_API_KEY
+#import api keys
+open_ai_key = os.environ.get('OPENAI_API_KEY')
+debater_key = os.environ.get('DEBATER_API_KEY')
+openai.api_key = open_ai_key
+debater_api = DebaterApi(debater_key)
+
+
+
 
 #Oversettelsesfunksjon norsk til engelsk
 def translate_to_english(norwegian_text):

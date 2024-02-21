@@ -5,9 +5,15 @@ from debater_python_api.api.sentence_level_index.client.article_retrieval_reques
 from DebaterApi_key import DebaterApiKey
 from funksjoner import wiki_sentences
 from PyDictionary import PyDictionary
+import os
+
+#import api key
+debater_key = os.environ.get('DEBATER_API_KEY')
+debater_api = DebaterApi(debater_key)
+
 
 dictionary=PyDictionary()
-debater_api = DebaterApi(DebaterApiKey)
+
 
 def get_argument_scores(arguments_list, topic):
      # Klargjør data til Debater API
