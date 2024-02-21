@@ -77,7 +77,7 @@ def generate_article(chosen_sentences, word_count=300):
 
 def get_evidence_scores(arguments_list, topic):
     # Initialize the Debater API
-    api_key = DebaterApiKey  # Ensure this is your valid API key
+    api_key = debater_key # Ensure this is your valid API key
     debater_api = DebaterApi(api_key)
 
     # Split the string into individual sentences
