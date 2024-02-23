@@ -5,7 +5,6 @@ anyio==3.7.1
 asttokens==2.4.1
 async-timeout==4.0.3
 attrs==23.1.0
-beautifulsoup4==4.12.3
 blinker==1.6.2
 blis==0.7.10
 bs4==0.0.2
@@ -77,7 +76,6 @@ spacy-legacy==3.0.12
 spacy-loggers==1.0.5
 srsly==2.4.7
 stack-data==0.6.3
-thinc==8.1.12
 threadpoolctl==3.2.0
 tqdm==4.66.1
 traitlets==5.14.1
