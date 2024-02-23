@@ -8,9 +8,6 @@ debater_key = os.environ.get('DEBATER_API_KEY')
 debater_api = DebaterApi(debater_key)
 
 
-dictionary=PyDictionary()
-
-
 def get_argument_scores(arguments_list, topic):
      # Klargjør data til Debater API
     sentence_topic_dicts = [{'sentence': sentence, 'topic': topic} for sentence in arguments_list]
