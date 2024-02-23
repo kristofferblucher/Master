@@ -1,11 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import openai
 import os
-from funksjoner import generate_article, translate_to_english, get_evidence_scores, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english
+from funksjoner import generate_article, translate_to_english, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english
 from debater_funksjoner import wiki_term_extractor,index_searcher, get_argument_scores
 from debater_python_api.api.debater_api import DebaterApi
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
-from debater_python_api.api.sentence_level_index.client.sentence_query_request import SentenceQueryRequest
 
 #import api keys
 open_ai_key = os.environ.get('OPENAI_API_KEY')

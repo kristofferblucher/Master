@@ -1,10 +1,6 @@
 from debater_python_api.api.debater_api import DebaterApi
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
 from debater_python_api.api.sentence_level_index.client.sentence_query_request import SentenceQueryRequest
-from debater_python_api.api.sentence_level_index.client.article_retrieval_request import ArticleRetrievalRequest
-from DebaterApi_key import DebaterApiKey
-from funksjoner import wiki_sentences
-from PyDictionary import PyDictionary
 import os
 
 #import api key
