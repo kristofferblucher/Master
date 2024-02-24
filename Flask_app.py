@@ -43,7 +43,7 @@ def støtteverktøy():
         try:
             result = index_searcher(wiki_terms,tema,query_size=20)
         except: 
-            flash(f'Feil ved henting av setninger til temaet: "{tekst}". Prøv å omformulere ordet eller setningen litt.', 'error')
+            flash(f'Feil ved henting av setninger til temaet: "{tekst}".Prøv å omformulere ordet eller setningen litt.', 'error')
             return redirect(url_for('støtteverktøy'))
         
         print("Her kommer indeksen:",result)
