@@ -144,9 +144,8 @@ def sekvens():
 #Parametre (litt flere valg for brukeren)
 @app.route('/verktøy/setninger/artikkel/parametre', methods=['GET','POST'])
 def parametre():
-    global antall_ord
     if request.method == 'POST':
-        antall_ord = request.form.get('textarea')
+        session['antall_ord'] = request.form.get('textarea')
         return redirect(url_for('artikkel'))
 
 
@@ -159,6 +158,8 @@ def artikkel():
     selected_sentences = session.get('selected_sentences', [])
     print("HER ER DE VALGTE SETNINGENE TIL ARTIKKELEN:",selected_sentences)
     generated_article = session.get('generated_article', None)
+
+    antall_ord = session.get('antall_ord') 
 
 
     if not generated_article or request.method == 'POST':
