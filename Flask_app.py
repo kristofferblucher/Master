@@ -68,7 +68,7 @@ def setninger():
     norske_setninger = session.get('norske_setninger', [])
     print("her er norske setningene:", norske_setninger)
     norske_setninger_med_score = [(sentence, score) for sentence, score in norske_setninger]
-    
+    setninger_sortert = sorted(norske_setninger_med_score, key=lambda x: x[1], reverse=True)
     
     selected_sentences= []
     
@@ -88,7 +88,7 @@ def setninger():
         # Prosesser valgte setninger
 
 
-    return render_template('setninger.html', norske_setninger_med_score=norske_setninger_med_score, selected_sentences=selected_sentences)
+    return render_template('setninger.html', norske_setninger_med_score=setninger_sortert, selected_sentences=selected_sentences)
 
 @app.route('/brukerinput', methods=['GET','POST'])
 def bruker_input():
