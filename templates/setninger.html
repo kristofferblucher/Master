@@ -12,6 +12,7 @@
             <div class="sentence" draggable="true">
                 <span class="sentence-text">{{ sentence }}</span>
                 <span class="score">Argument-kvalitet: {{ score }}</span>
+                <span id="info-icon" data-toggle="tooltip" data-placement="right" title="Argument-kvalitet er en score for kvaliteten til setningen basert på struktur, klarhet og relevans til temaet. 1.0 er den høyeste og beste scoren, mens 0,0 er den laveste og dårligste."><i class="fas fa-info-circle"></i></span>
                 <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}" class="sentence-checkbox">
             </div>
         {% endfor %}

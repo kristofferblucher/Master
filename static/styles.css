@@ -60,3 +60,13 @@ body{
     white-space: pre-wrap; 
 }
 
+#loading h1 {
+    color: white;
+    font-size: 2em;
+}
+
+#info-icon {
+    color: rgba(25, 23, 23, 0.863);  /* Bootstrap primary color */
+    cursor: pointer;
+    margin-left: 5px;
+}

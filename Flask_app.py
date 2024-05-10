@@ -60,7 +60,7 @@ def støtteverktøy():
 
 
 #Her skal egentlig debater generere setningene inni "sentences"-listen, basert på valgt tema fra forrige side
-@app.route('/verktøy/setninger',methods=['GET', 'POST'])
+@app.route('/setninger',methods=['GET', 'POST'])
 def setninger():
 
     session['generated_article'] = None
@@ -90,7 +90,7 @@ def setninger():
 
     return render_template('setninger.html', norske_setninger_med_score=norske_setninger_med_score, selected_sentences=selected_sentences)
 
-@app.route('/verktøy/setninger/brukerinput', methods=['GET','POST'])
+@app.route('/brukerinput', methods=['GET','POST'])
 def bruker_input():
     global user_input
     if request.method == 'POST':
@@ -142,7 +142,7 @@ def sekvens():
 
 
 #Parametre (litt flere valg for brukeren)
-@app.route('/verktøy/setninger/artikkel/parametre', methods=['GET','POST'])
+@app.route('/parametre', methods=['GET','POST'])
 def parametre():
     if request.method == 'POST':
         session['antall_ord'] = request.form.get('textarea')
@@ -152,7 +152,7 @@ def parametre():
     return render_template('parametre.html')
 
 #Artikkel og resultat-side
-@app.route('/verktøy/setninger/artikkel', methods=['GET'])
+@app.route('/artikkel', methods=['GET'])
 def artikkel():
     
     selected_sentences = session.get('selected_sentences', [])
