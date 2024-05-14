@@ -128,7 +128,8 @@ def translate_tuple_norwegian(english_sentences_with_scores):
             response = openai.chat.completions.create(
                 model="gpt-4",  # specify the GPT model
                 messages=[
-                    {"role": "system", "content": "You are a translation assistant. Translate from English to Norwegian."},
+                    {"role": "system", "content": """You are a translation assistant. Translate from English to Norwegian. Focus on using norwegian words, 
+                    and do not use too direct translation. For example: Translating 'manifesting' to 'manifestere', is too direct."""},
                     {"role": "user", "content": english_text}
                 ]
             )

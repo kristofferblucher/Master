@@ -111,7 +111,6 @@ def setninger():
             return redirect(url_for('bruker_input'))
         # Prosesser valgte setninger
 
-
     return render_template('setninger.html', norske_setninger_med_score=setninger_sortert, selected_sentences=selected_sentences)
 
 @app.route('/brukerinput', methods=['GET','POST'])
