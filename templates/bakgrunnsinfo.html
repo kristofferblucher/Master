@@ -1,48 +1,53 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1> Her er din genererte artikkel.
+    <h1> Her har du litt bakgrunnsinfo som en start på prosessen. 
     </h1>
-    <h5> Du kan redigere artikkelen ved å klikke deg inn i teksten. </h5>
     <br> <br>
    
 
     <br>
     
-
     <style>
         h1{margin: 25px; font-size: 35px;}
         .article-content {
             white-space: pre-line; /* Bevarer hvite mellomrom og linjeskift */
-            text-align: left; 
+            text-align: center; 
         }
     
 
     </style>
 
 <div class="navigation-buttons">
-    <button data-url="{{ url_for('parametre') }}" class="btn btn-light" id="goBack">
+    <button data-url="{{ url_for('støtteverktøy') }}" class="btn btn-light" id="goBack">
         <i class="fas fa-arrow-left"></i>
     </button>
-    <span class="navigation-text">(7/7)</span>
+    <span class="navigation-text">(2/7)</span>
 </div>
 
 
     <link rel="stylesheet" href="/static/styles.css">
-
-    <button id="button-vis-engelsk" class="myButton" onclick="toggleLanguage()"> Vis engelsk versjon</button> 
-
-
-
-   {% if generated_article %}
-        <div id= 'article-no' contenteditable="true" class="article-content">{{ generated_article }}</div>
-        <div id="article-en" contenteditable="true" class="article-content" style="display:none;">
-            {{ generated_article_en}} </div>
     
-        <br> <br> <br>
+
+    <button id="button-vis-engelsk" class="myButton" onclick="toggleLanguage()"> Vis engelsk versjon</button>
+    
+    <br> <br> 
+
+
+
+   {% if bakgrunnsinfo %}
+        <div id= 'article-no' contenteditable="true" class="article-content">{{ bakgrunnsinfo }}</div>
+        <div id="article-en" contenteditable="true" class="article-content" style="display:none;">
+            {{ bakgrunnsinfo_en}} </div>
+    
+        <br> 
     {% else %}
         <p>Ingen setninger valgt.</p>
     {% endif %}
+
+    <a href="/setninger" class="myButton">Gå videre</a>
+
+    <br>
 
     <script>
         function toggleLanguage() {
@@ -63,5 +68,3 @@
         </script>
     
 {% endblock %}
-
-

@@ -44,10 +44,28 @@ def translate_to_norwegian(english_text):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
+    
+def finn_bakgrunnsinfo(topic, word_count=250):
+            
+        system_prompt = f"""You are an background discoverer. Find background info on the given topic from the user. 
+        Give the user some general facts and knowledge on the topicThe article should be around {word_count} words long. 
+        Always include a title for the article as a heading. The heading should be "Background info on" and then the name of the topic. """
+
+        response = openai.chat.completions.create(
+            model="gpt-4",  # valgte gpt modellen
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": topic},
+            ]
+
+        )
+
+        bakgrunnsinfo_engelsk= response.choices[0].message.content
+        return bakgrunnsinfo_engelsk
 
 
 #Function for generating article
-def generate_article(chosen_sentences, word_count=300):
+def generate_article(chosen_sentences, word_count=100):
     try:
 
         if isinstance(chosen_sentences, list):

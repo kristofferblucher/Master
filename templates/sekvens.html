@@ -5,6 +5,15 @@
     Rediger om du ønsker å endre eller fjerne noen av de: <br> <br> 
 </h1>
 
+
+<div class="navigation-buttons">
+    <button data-url="{{ url_for('bruker_input') }}" class="btn btn-light" id="goBack">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <span class="navigation-text">(5/7)</span>
+</div>
+
+
 <link rel="stylesheet" href="/static/styles.css">
 <form method="post">
     <div class="sentences-container">
@@ -14,7 +23,6 @@
                 <span class="score">Argument-kvalitet: {{ score }}</span>
                 <span id="info-icon" data-toggle="tooltip" data-placement="right" title="Argument-kvalitet er en score for kvaliteten til setningen basert på struktur, klarhet og relevans til temaet. 1.0 er den høyeste og beste scoren, mens 0,0 er den laveste og dårligste."><i class="fas fa-info-circle"></i></span>
                 <input type="checkbox" id="checkbox" name="sentence" value="{{ sentence }}" class="sentence-checkbox" checked="true">
-                
             </div>
         {% endfor %}
     </div>

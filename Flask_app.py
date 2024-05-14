@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import openai
 import os
-from funksjoner import generate_article, translate_to_english, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english
+from funksjoner import generate_article, translate_to_english, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english, finn_bakgrunnsinfo
 from debater_funksjoner import wiki_term_extractor,index_searcher, get_argument_scores
 from debater_python_api.api.debater_api import DebaterApi
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -54,12 +54,36 @@ def støtteverktøy():
             print(f"Setning: {sentence}, Score: {score}")
         session['norske_setninger'] = result
         session['topic'] = tema
-        return redirect(url_for("setninger"))
+        return redirect(url_for("bakgrunnsinfo"))
 
     return render_template('verktøy.html',title="støtteverktøy")
 
+#Bakgrunnsinfo
+@app.route('/bakgrunnsinfo', methods=['GET','POST'])
+def bakgrunnsinfo():
+    antall_ord = 300
+    tema = session['topic']
 
-#Her skal egentlig debater generere setningene inni "sentences"-listen, basert på valgt tema fra forrige side
+    if request.method == 'GET':
+            try: 
+                print(tema)
+                bakgrunnsinfo = finn_bakgrunnsinfo(tema,word_count=antall_ord)
+                session['bakgrunnsinfo_en'] = bakgrunnsinfo
+                session['bakgrunnsinfo_no'] = translate_to_norwegian(bakgrunnsinfo)
+
+            except: 
+                tema= "Ingen tema"
+                bakgrunnsinfo = finn_bakgrunnsinfo(tema,word_count=antall_ord)
+                session['bakgrunnsinfo_en'] = bakgrunnsinfo
+                session['bakgrunnsinfo_no'] = translate_to_norwegian(bakgrunnsinfo)
+
+    if request.method == 'POST':
+        return redirect(url_for("startside"))
+    
+    return render_template('bakgrunnsinfo.html', bakgrunnsinfo=session['bakgrunnsinfo_no'], bakgrunnsinfo_en=session['bakgrunnsinfo_en'])
+
+
+#Setninger fra Debater
 @app.route('/setninger',methods=['GET', 'POST'])
 def setninger():
 
@@ -93,10 +117,12 @@ def setninger():
 @app.route('/brukerinput', methods=['GET','POST'])
 def bruker_input():
     global user_input
+    user_input = None
     if request.method == 'POST':
         sentences = request.form.get('textarea')
         user_input = translate_to_english(sentences)
         return redirect(url_for('sekvens'))
+    else: user_input= None
 
     return render_template('bruker_input.html',title="brukerinput")
 
@@ -109,8 +135,13 @@ def sekvens():
     print(selected_sentences)
 
     engelske_setninger = translate_list_to_english(selected_sentences)
-    bruker_setninger = split_sentences(user_input)
-    bruker_setninger.extend(engelske_setninger)
+
+    if user_input:
+        bruker_setninger = split_sentences(user_input)
+        bruker_setninger.extend(engelske_setninger)
+
+    else:
+        bruker_setninger=engelske_setninger
 
     print("ALLE SETNINGENE:",bruker_setninger)
     valgte_setninger = get_argument_scores(bruker_setninger,tema)
@@ -138,7 +169,7 @@ def sekvens():
         # Prosesser valgte setninger
 
     return render_template('sekvens.html',title="sekvens", sekvens_med_score=sekvens_med_score)
-    
+   
 
 
 #Parametre (litt flere valg for brukeren)
@@ -167,6 +198,9 @@ def artikkel():
             generated_article = generate_article(selected_sentences,word_count=antall_ord)
             session['generated_article_en'] = generated_article
             session['generated_article_no'] = translate_to_norwegian(generated_article)
+        else: 
+            session['generated_article_en'] = "You have not generated any article"
+            session['generated_article_no'] = "Du har ikke generert noe artikkel enda"
     
     return render_template('artikkel.html', generated_article=session['generated_article_no'], generated_article_en=session['generated_article_en'])
 

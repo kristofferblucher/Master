@@ -20,6 +20,26 @@
 
 }
 
+.navigation-buttons {
+    position: absolute; /* Positions the div relative to the nearest positioned ancestor */
+    top: 75px; /* Adjust this value based on the height of your navbar */
+    left: 0; /* Aligns the container to the left */
+    margin-left: 10px; /* Adds some space from the left edge of the screen */
+    z-index: 1000; /* Ensures the buttons are on top of other content */
+}
+
+.btn {
+    display: inline-flex;
+    margin-right: 5px; 
+    font-size: 24px;  
+    vertical-align: middle;
+}
+
+.navigation-text{
+    font-size: large;
+    font-weight:bold;
+}
+
 #button-vis-engelsk {
     position: absolute;
     top: 180px;
