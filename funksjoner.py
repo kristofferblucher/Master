@@ -48,7 +48,7 @@ def translate_to_norwegian(english_text):
 def finn_bakgrunnsinfo(topic, word_count=250):
             
         system_prompt = f"""You are an background discoverer. Find background info on the given topic from the user. 
-        Give the user some general facts and knowledge on the topicThe article should be around {word_count} words long. 
+        Give the user some general facts and knowledge on the topic. The article should be around {word_count} words long. 
         Always include a title for the article as a heading. The heading should be "Background info on" and then the name of the topic. """
 
         response = openai.chat.completions.create(
@@ -78,7 +78,7 @@ def generate_article(chosen_sentences, word_count=100):
         a heading. """
 
         response = openai.chat.completions.create(
-            model="gpt-4",  # valgte gpt modellen
+            model="gpt-4o",  # valgte gpt modellen
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": chosen_sentences},
