@@ -6,7 +6,7 @@ from debater_funksjoner import wiki_term_extractor,index_searcher, get_argument_
 from debater_python_api.api.debater_api import DebaterApi
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
 
-#import api keys
+#import api keys for debater and openai
 open_ai_key = os.environ.get('OPENAI_API_KEY')
 debater_key = os.environ.get('DEBATER_API_KEY')
 openai.api_key = open_ai_key
