@@ -64,18 +64,18 @@ def bakgrunnsinfo():
     antall_ord = 300
     tema = session['topic']
 
-    if request.method == 'GET':
-            try: 
-                print(tema)
-                bakgrunnsinfo = finn_bakgrunnsinfo(tema,word_count=antall_ord)
-                session['bakgrunnsinfo_en'] = bakgrunnsinfo
-                session['bakgrunnsinfo_no'] = translate_to_norwegian(bakgrunnsinfo)
+    if 'bakgrunnsinfo_en' not in session or request.method == 'POST':
+        try: 
+            print(tema)
+            bakgrunnsinfo = finn_bakgrunnsinfo(tema,word_count=antall_ord)
+            session['bakgrunnsinfo_en'] = bakgrunnsinfo
+            session['bakgrunnsinfo_no'] = translate_to_norwegian(bakgrunnsinfo)
 
-            except: 
-                tema= "Ingen tema"
-                bakgrunnsinfo = finn_bakgrunnsinfo(tema,word_count=antall_ord)
-                session['bakgrunnsinfo_en'] = bakgrunnsinfo
-                session['bakgrunnsinfo_no'] = translate_to_norwegian(bakgrunnsinfo)
+        except: 
+            tema= "Ingen tema"
+            bakgrunnsinfo = finn_bakgrunnsinfo(tema,word_count=antall_ord)
+            session['bakgrunnsinfo_en'] = bakgrunnsinfo
+            session['bakgrunnsinfo_no'] = translate_to_norwegian(bakgrunnsinfo)
 
     if request.method == 'POST':
         return redirect(url_for("startside"))
