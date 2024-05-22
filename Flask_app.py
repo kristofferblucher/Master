@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import openai
 import os
-from funksjoner import generate_article, translate_to_english, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english, finn_bakgrunnsinfo
+from funksjoner import generate_article, translate_to_english, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english, finn_bakgrunnsinfo,legg_til_chatgpt
 from debater_funksjoner import wiki_term_extractor,index_searcher, get_argument_scores
 from debater_python_api.api.debater_api import DebaterApi
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -47,6 +47,11 @@ def støtteverktøy():
             return redirect(url_for('støtteverktøy'))
         
         print("Her kommer indeksen:",result)
+
+        #Legg til Chatgpt på setningene
+        result = legg_til_chatgpt(result)
+
+        #Legg til argument-score på setningene
         result = get_argument_scores(result, tema)
         result = translate_tuple_norwegian(result)
         session.clear()
@@ -76,9 +81,6 @@ def bakgrunnsinfo():
             bakgrunnsinfo = finn_bakgrunnsinfo(tema,word_count=antall_ord)
             session['bakgrunnsinfo_en'] = bakgrunnsinfo
             session['bakgrunnsinfo_no'] = translate_to_norwegian(bakgrunnsinfo)
-
-    if request.method == 'POST':
-        return redirect(url_for("startside"))
     
     return render_template('bakgrunnsinfo.html', bakgrunnsinfo=session['bakgrunnsinfo_no'], bakgrunnsinfo_en=session['bakgrunnsinfo_en'])
 
@@ -87,15 +89,17 @@ def bakgrunnsinfo():
 @app.route('/setninger',methods=['GET', 'POST'])
 def setninger():
 
-    session['generated_article'] = None
+    #Clear ut setninger i tilfelle det ligger noe her fra før
+    session['selected_sentences'] = None
 
+    #Hent setningene og sorter de fra høyest til lavest score
     norske_setninger = session.get('norske_setninger', [])
     print("her er norske setningene:", norske_setninger)
     norske_setninger_med_score = [(sentence, score) for sentence, score in norske_setninger]
     setninger_sortert = sorted(norske_setninger_med_score, key=lambda x: x[1], reverse=True)
     
+
     selected_sentences= []
-    
 
     if request.method == 'POST':
         selected_sentences = request.form.getlist('sentence')
@@ -103,27 +107,15 @@ def setninger():
         
         if selected_sentences:
             session['selected_sentences'] = selected_sentences
-            return redirect(url_for('bruker_input'))
+            return redirect(url_for('sekvens'))
         
         else:
             selected_sentences = tema
             session['selected_sentences'] = selected_sentences
-            return redirect(url_for('bruker_input'))
+            return redirect(url_for('sekvens'))
         # Prosesser valgte setninger
 
     return render_template('setninger.html', norske_setninger_med_score=setninger_sortert, selected_sentences=selected_sentences)
-
-@app.route('/brukerinput', methods=['GET','POST'])
-def bruker_input():
-    global user_input
-    user_input = None
-    if request.method == 'POST':
-        sentences = request.form.get('textarea')
-        user_input = translate_to_english(sentences)
-        return redirect(url_for('sekvens'))
-    else: user_input= None
-
-    return render_template('bruker_input.html',title="brukerinput")
 
 @app.route('/sekvens', methods=['GET','POST'])
 def sekvens():
@@ -135,22 +127,13 @@ def sekvens():
 
     engelske_setninger = translate_list_to_english(selected_sentences)
 
-    if user_input:
-        bruker_setninger = split_sentences(user_input)
-        bruker_setninger.extend(engelske_setninger)
-
-    else:
-        bruker_setninger=engelske_setninger
-
-    print("ALLE SETNINGENE:",bruker_setninger)
-    valgte_setninger = get_argument_scores(bruker_setninger,tema)
+    print("ALLE SETNINGENE:",engelske_setninger)
+    valgte_setninger = get_argument_scores(engelske_setninger,tema)
     valgte_setninger = translate_tuple_norwegian(valgte_setninger)
     
 
     sekvens_med_score = [(sentence, score) for sentence, score in valgte_setninger]
     print(sekvens_med_score)
-
-    print(user_input)
 
     if request.method == 'POST':
         selected_sentences = request.form.getlist('sentence')
@@ -159,49 +142,22 @@ def sekvens():
 
         if selected_sentences:
             session['selected_sentences'] = selected_sentences
-            return redirect(url_for('parametre'))
+            return redirect(url_for('likte_setninger'))
         
         else:
             selected_sentences = tema
             session['selected_sentences'] = selected_sentences
-            return redirect(url_for('parametre'))
+            return redirect(url_for('likte_setninger'))
         # Prosesser valgte setninger
 
     return render_template('sekvens.html',title="sekvens", sekvens_med_score=sekvens_med_score)
-   
-
-
-#Parametre (litt flere valg for brukeren)
-@app.route('/parametre', methods=['GET','POST'])
-def parametre():
-    if request.method == 'POST':
-        session['antall_ord'] = request.form.get('textarea')
-        return redirect(url_for('artikkel'))
-
-
-    return render_template('parametre.html')
 
 #Artikkel og resultat-side
-@app.route('/artikkel', methods=['GET'])
-def artikkel():
+@app.route('/likte_setninger', methods=['GET'])
+def likte_setninger():
+    "Dette er de setningene du likte:"
     
-    selected_sentences = session.get('selected_sentences', [])
-    print("HER ER DE VALGTE SETNINGENE TIL ARTIKKELEN:",selected_sentences)
-    generated_article = session.get('generated_article', None)
-
-    antall_ord = session.get('antall_ord') 
-
-
-    if not generated_article or request.method == 'POST':
-        if selected_sentences:
-            generated_article = generate_article(selected_sentences,word_count=antall_ord)
-            session['generated_article_en'] = generated_article
-            session['generated_article_no'] = translate_to_norwegian(generated_article)
-        else: 
-            session['generated_article_en'] = "You have not generated any article"
-            session['generated_article_no'] = "Du har ikke generert noe artikkel enda"
-    
-    return render_template('artikkel.html', generated_article=session['generated_article_no'], generated_article_en=session['generated_article_en'])
+    return render_template('artikkel.html')
 
 
 

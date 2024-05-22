@@ -196,6 +196,39 @@ def split_sentences(text):
     sentences = [sentence.strip() for sentence in sentences if sentence.strip()]
     return sentences
 
+def legg_til_chatgpt(argument_liste):
+    forbedret_liste= []
+
+    for argument in argument_liste:
+        forbedret_setning = forbedre_med_chatgpt(argument)
+        forbedret_liste.append(forbedret_setning)
+    
+    print("Her er den forbedrede listen:", forbedret_liste)
+
+    return forbedret_liste
+
+def forbedre_med_chatgpt(setning):
+    try:
+         system_prompt = f"""You are an assistant to improve the argumentation quality of the input. 
+                 Improve the wording, improve the arguments and use 3 sentences per content from the user. 
+                 The arguments are supposed to inspire journalists in their process before writing an article. 
+                 Make sure that the sentences makes sense for them, giving them some type of context.  """
+         
+         response = openai.chat.completions.create(
+             model="gpt-4o",  # valgte gpt modellen
+             messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": setning},
+            ])
+         
+         forbedret_setning = response.choices[0].message.content
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        forbedret_setning = "Error in improving the sentence."
+          
+    return forbedret_setning
+
 # def sjekk_om_gyldig_ord(ord):
 #     sjekk = enchant.Dict("nb_NO")
 #     return sjekk.check(ord)
