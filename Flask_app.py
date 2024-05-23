@@ -102,16 +102,18 @@ def setninger():
     selected_sentences= []
 
     if request.method == 'POST':
-        selected_sentences = request.form.getlist('sentence')
+        selected_sentences = request.form.getlist('sentence_name')
         print('VALGTE SETNINGER:', selected_sentences)
+        engelske_setninger = translate_list_to_english(selected_sentences)
+        session['selected_sentences'] = engelske_setninger
         
         if selected_sentences:
-            session['selected_sentences'] = selected_sentences
+            session['selected_sentences'] = engelske_setninger
             return redirect(url_for('sekvens'))
         
         else:
             selected_sentences = tema
-            session['selected_sentences'] = selected_sentences
+            session['selected_sentences'] = engelske_setninger
             return redirect(url_for('sekvens'))
         # Prosesser valgte setninger
 
@@ -121,43 +123,66 @@ def setninger():
 def sekvens():
     
     selected_sentences = session.get('selected_sentences',[])
+
+
     tema = session.get('topic',[])
 
     print(selected_sentences)
 
-    engelske_setninger = translate_list_to_english(selected_sentences)
-
-    print("ALLE SETNINGENE:",engelske_setninger)
-    valgte_setninger = get_argument_scores(engelske_setninger,tema)
-    valgte_setninger = translate_tuple_norwegian(valgte_setninger)
+    print("ALLE SETNINGENE:",selected_sentences)
+    valgte_setninger_en = get_argument_scores(selected_sentences,tema)
+    valgte_setninger = translate_tuple_norwegian(valgte_setninger_en)
     
+    #Sekvens med score både engelsk og norsk
+    sekvens_med_score_en = [(sentence, score) for sentence, score in valgte_setninger_en]
+    session['sekvens_med_score_en'] = sekvens_med_score_en
 
     sekvens_med_score = [(sentence, score) for sentence, score in valgte_setninger]
+    session['sekvens_med_score'] = sekvens_med_score
+
     print(sekvens_med_score)
 
     if request.method == 'POST':
-        selected_sentences = request.form.getlist('sentence')
-        print("HER ER DE VALGTE 1:", selected_sentences)
-        session['selected_sentences'] = selected_sentences
+        sentence_scores = request.form.getlist('sentence')
+        processed_data = [entry.split('|') for entry in sentence_scores if entry]  # Splitter hver innsending til setning og score
+        selected_sentences = processed_data
+        session['sequence_sentences'] = selected_sentences
 
         if selected_sentences:
-            session['selected_sentences'] = selected_sentences
+            session['sequence_sentences'] = selected_sentences
             return redirect(url_for('likte_setninger'))
         
         else:
             selected_sentences = tema
-            session['selected_sentences'] = selected_sentences
+            session['sequence_sentences'] = selected_sentences
             return redirect(url_for('likte_setninger'))
         # Prosesser valgte setninger
 
-    return render_template('sekvens.html',title="sekvens", sekvens_med_score=sekvens_med_score)
+    return render_template('sekvens.html',title="sekvens",  sekvens_med_score=sekvens_med_score,sekvens_med_score_en=sekvens_med_score_en)
 
 #Artikkel og resultat-side
 @app.route('/likte_setninger', methods=['GET'])
 def likte_setninger():
-    "Dette er de setningene du likte:"
+
+    #Hent setninger brukeren har valgt sammen med score til setningen
+    selected_sentences = session.get('sequence_sentences')
+    likte_setninger_med_score = selected_sentences
+
+    print("12230:FADADF",selected_sentences)
+
+
+
+    # #Pass på at de er på engelsk, slik at de kan få argument-score
+    # likte_setninger_engelsk = translate_list_to_english(selected_sentences)
+    # valgte_setninger_en = get_argument_scores(likte_setninger_engelsk,tema)
+
+
+    # #Oversett tuppel med score til norsk igjen
+    # valgte_setninger = translate_tuple_norwegian(valgte_setninger_en)
+
+    # sekvens_med_score = [(sentence, score) for sentence, score in valgte_setninger]
     
-    return render_template('artikkel.html')
+    return render_template('likte_setninger.html', selected_sentences=selected_sentences, likte_setninger_med_score=likte_setninger_med_score)
 
 
 

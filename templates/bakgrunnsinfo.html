@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="/static/styles.css">
     
 
-    <button id="button-vis-engelsk" class="myButton" onclick="toggleLanguage()"> Vis engelsk versjon</button>
+    <button id="button-vis-engelsk-info" class="myButton" onclick="toggleLanguageInfo()"> Vis engelsk versjon</button>
     
     <br> <br> 
 
@@ -47,22 +47,5 @@
 
     <br>
 
-    <script>
-        function toggleLanguage() {
-            var en = document.getElementById('article-en');
-            var no = document.getElementById('article-no');
-            var button = document.getElementById('button-vis-engelsk')
-
-            if (en.style.display === "none") {
-                en.style.display = "block";
-                no.style.display = "none";
-                button.textContent = "Vis norsk versjon";
-            } else {
-                en.style.display = "none";
-                no.style.display = "block";
-                button.textContent = "Vis engelsk versjon";
-            }
-        }
-        </script>
     
 {% endblock %}
