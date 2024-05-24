@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1> Her har du litt bakgrunnsinfo som en start på prosessen. 
+    <h1> Her har du litt bakgrunnsinfo om ditt valgte tema:
     </h1>
-    <br> <br>
+    <br> 
 
     
     <style>
@@ -38,13 +38,15 @@
         <div id="article-en" contenteditable="true" class="article-content" style="display:none;">
             {{ bakgrunnsinfo_en}} </div>
     
-        <br> 
+    
     {% else %}
         <p>Ingen setninger valgt.</p>
     {% endif %}
 
     <a href="/setninger" class="myButton">Gå videre</a>
 
+    <br>
+    <br>
     <br>
 
     

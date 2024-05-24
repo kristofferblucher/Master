@@ -40,6 +40,13 @@
     font-weight:bold;
 }
 
+#button-vis-engelsk-info {
+    position: absolute;
+    top: 180px;
+    right: 200px;
+
+}
+
 #button-vis-engelsk {
     position: absolute;
     top: 180px;
