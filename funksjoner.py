@@ -65,7 +65,7 @@ def finn_bakgrunnsinfo(topic, word_count=250):
 
 
 #Function for generating article
-def generate_article(chosen_sentences, word_count=100):
+def generate_article(chosen_sentences,article_style, word_count=100):
     try:
 
         if isinstance(chosen_sentences, list):
@@ -74,7 +74,8 @@ def generate_article(chosen_sentences, word_count=100):
             print("This is the chosen sentences:",chosen_sentences)
             
         system_prompt = f"""You are an article generator. Generate a journalistic article based on the given sentences from the user. 
-        Include the sentences within the article. The article should be around {word_count} words long. Always include a title for the article as 
+        Include the sentences within the article. The article should be around {word_count} words long. 
+        The writing style for the article should be the following:{article_style}. Always include a title for the article as 
         a heading. """
 
         response = openai.chat.completions.create(

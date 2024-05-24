@@ -2,7 +2,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <h1> Demo støtteverktøy </h1>
+    <h1> Skrivestil og lengde på artikkel </h1>
 
     <style>
         h1{margin: 30px; }
@@ -26,10 +26,22 @@
     <span class="navigation-text">(6/7)</span>
 </div>
 
+<br>
 
     <link rel="stylesheet" href="/static/styles.css">
 
     <form method = "POST" id="temaValg">
+
+        <h3>Hvilken stil ønsker du at teksten skal ha?</h3> 
+        <h5> (Feks. argumenterende artikkel, nyhets-tekst, informerende tekst osv.)</h5>
+        <br> 
+        <textarea 
+                rows="2"
+                cols="30"
+                name="textarea_2"></textarea> 
+
+                <br>
+
         <h3>Hvor mange ord skal teksten være?</h3> 
         <h5> (Antall ord i tall, feks.: 200)</h5>
         <br> 
@@ -37,8 +49,13 @@
                 rows="1"
 				cols="7"
                 name="textarea"></textarea> 
+        
+                <br>
+
 		<input type="submit" value="Generer artikkel" id="myButton" class="myButton"> 
     </form>
+
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var textarea = document.querySelector('#temaValg textarea');

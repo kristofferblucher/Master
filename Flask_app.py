@@ -176,6 +176,7 @@ def sekvens():
 def parametre():
     if request.method == 'POST':
         session['antall_ord'] = request.form.get('textarea')
+        session['artikkel_stil'] = request.form.get('textarea_2')
         return redirect(url_for('artikkel'))
 
 
@@ -190,11 +191,13 @@ def artikkel():
     generated_article = session.get('generated_article', None)
 
     antall_ord = session.get('antall_ord') 
+    artikkel_stil = session.get('artikkel_stil')
+    print("HER ER ARTIKKELEN SIN STIL:",artikkel_stil)
 
 
     if not generated_article or request.method == 'POST':
         if selected_sentences:
-            generated_article = generate_article(selected_sentences,word_count=antall_ord)
+            generated_article = generate_article(selected_sentences,artikkel_stil,word_count=antall_ord)
             session['generated_article_en'] = generated_article
             session['generated_article_no'] = translate_to_norwegian(generated_article)
         else: 
