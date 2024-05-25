@@ -108,10 +108,10 @@ def index_searcher(dc,topic,query_size):
     evidences = [candidates_list[i] for i in range(len(evidence_scores)) if evidence_scores[i] > evidence_threshold]
     print('Number of evidences: {}'.format(len(evidences)))
     
-    # # Check the number of evidences
-    # if len(evidences) <= 3 and query_size == 20:  # Ensure this adjustment happens only once
-    #     print("Increasing query size due to low evidence count...")
-    #     return index_searcher(dc, topic, query_size=150)  # Recursively call the function with a larger query size
+    # Check the number of evidences
+    if len(evidences) <= 3 and query_size == 20:  # Ensure this adjustment happens only once
+        print("Increasing query size due to low evidence count...")
+        return index_searcher(dc, topic, query_size=500)  # Recursively call the function with a larger query size
         
     
     return evidences
