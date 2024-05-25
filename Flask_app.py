@@ -66,7 +66,7 @@ def støtteverktøy():
 #Bakgrunnsinfo
 @app.route('/bakgrunnsinfo', methods=['GET','POST'])
 def bakgrunnsinfo():
-    antall_ord = 300
+    antall_ord = 150
     tema = session['topic']
 
     if 'bakgrunnsinfo_en' not in session or request.method == 'POST':
