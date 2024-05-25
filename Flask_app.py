@@ -150,19 +150,16 @@ def sekvens():
     if 'bruker_setninger' not in session:
         if user_input:
             engelske_setninger = translate_list_to_english(selected_sentences)
-            print("ENGELSK SETNING 1:",engelske_setninger)
             bruker_setninger = split_sentences(user_input)
             bruker_setninger.extend(engelske_setninger)
-            print("BRUKER SETNING 2:",bruker_setninger)
             session['bruker_setninger'] = bruker_setninger
         else:
             bruker_setninger = engelske_setninger
     else:
         bruker_setninger = session['bruker_setninger']
 
-    # Debug check for bruker-setninger
+    # Debug check for bruker sine setninger
     print("ALLE SETNINGENE:", bruker_setninger)
-
 
     # Hent argument-score til alle setningene
     valgte_setninger = get_argument_scores(bruker_setninger, tema)
@@ -188,8 +185,6 @@ def sekvens():
             return redirect(url_for('parametre'))
 
     return render_template('sekvens.html', title="sekvens", sekvens_med_score=sekvens_med_score)
-
-   
 
 
 #Parametre (litt flere valg for brukeren)
