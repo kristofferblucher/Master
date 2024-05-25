@@ -212,7 +212,7 @@ def forbedre_med_chatgpt(setning):
          system_prompt = f"""You are an assistant to improve the argumentation quality of the input. 
                  Improve the wording, improve the arguments and use 3 sentences per content from the user. 
                  The arguments are supposed to inspire journalists in their process before writing an article. 
-                 Make sure that the sentences makes sense for them, giving them some type of context.  """
+                 Make sure that the sentences makes sense for them, giving them some type of context. Maximum 4 sentences.  """
          
          response = openai.chat.completions.create(
              model="gpt-4o",  # valgte gpt modellen
