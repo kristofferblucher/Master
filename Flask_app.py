@@ -87,7 +87,11 @@ def bakgrunnsinfo():
 @app.route('/setninger',methods=['GET', 'POST'])
 def setninger():
 
-    session['generated_article'] = None
+    #Clear ut setninger i tilfelle det ligger noe her fra før
+    session['selected_sentences'] = None
+
+    #Hent setningene og sorter de fra høyest til lavest score
+
 
     norske_setninger = session.get('norske_setninger', [])
     print("her er norske setningene:", norske_setninger)
@@ -100,7 +104,9 @@ def setninger():
     if request.method == 'POST':
         selected_sentences = request.form.getlist('sentence')
         print('VALGTE SETNINGER:', selected_sentences)
-        
+        engelske_setninger = translate_list_to_english(selected_sentences)
+        session['selected_sentences'] = engelske_setninger
+
         if selected_sentences:
             session['selected_sentences'] = selected_sentences
             return redirect(url_for('bruker_input'))
@@ -115,11 +121,11 @@ def setninger():
 
 @app.route('/brukerinput', methods=['GET','POST'])
 def bruker_input():
-    global user_input
-    user_input = None
+
     if request.method == 'POST':
         sentences = request.form.get('textarea')
         user_input = translate_to_english(sentences)
+        session['user_input'] = user_input
         return redirect(url_for('sekvens'))
     else: user_input= None
 
@@ -127,31 +133,47 @@ def bruker_input():
 
 @app.route('/sekvens', methods=['GET','POST'])
 def sekvens():
-    
-    selected_sentences = session.get('selected_sentences',[])
-    tema = session.get('topic',[])
+    # Hent valgte setninger, tema og bruker-input fra session
+    selected_sentences = session.get('selected_sentences', [])
+    tema = session.get('topic', [])
+    user_input = session.get('user_input', '')
 
-    print(selected_sentences)
+    # Debug check for initial values
+    print("Initial selected_sentences:", selected_sentences)
+    print("Initial user_input:", user_input)
 
-    engelske_setninger = translate_list_to_english(selected_sentences)
+    # Oversett valgte setninger til engelsk
+   # engelske_setninger = translate_list_to_english(selected_sentences)
+   # print("ENGELSK SETNING 1:",engelske_setninger)
 
-    if user_input:
-        bruker_setninger = split_sentences(user_input)
-        bruker_setninger.extend(engelske_setninger)
-
+    # Kombiner bruker-input med engelske setninger hvis tilgjengelig
+    if 'bruker_setninger' not in session:
+        if user_input:
+            engelske_setninger = translate_list_to_english(selected_sentences)
+            print("ENGELSK SETNING 1:",engelske_setninger)
+            bruker_setninger = split_sentences(user_input)
+            bruker_setninger.extend(engelske_setninger)
+            print("BRUKER SETNING 2:",bruker_setninger)
+            session['bruker_setninger'] = bruker_setninger
+        else:
+            bruker_setninger = engelske_setninger
     else:
-        bruker_setninger=engelske_setninger
+        bruker_setninger = session['bruker_setninger']
 
-    print("ALLE SETNINGENE:",bruker_setninger)
-    valgte_setninger = get_argument_scores(bruker_setninger,tema)
+    # Debug check for bruker-setninger
+    print("ALLE SETNINGENE:", bruker_setninger)
+
+
+    # Hent argument-score til alle setningene
+    valgte_setninger = get_argument_scores(bruker_setninger, tema)
     valgte_setninger = translate_tuple_norwegian(valgte_setninger)
-    
-
     sekvens_med_score = [(sentence, score) for sentence, score in valgte_setninger]
-    print(sekvens_med_score)
 
+    # Debug checking
+    print(sekvens_med_score)
     print(user_input)
 
+    # Prosesser de setningene bruker velger fra sekvensen
     if request.method == 'POST':
         selected_sentences = request.form.getlist('sentence')
         print("HER ER DE VALGTE 1:", selected_sentences)
@@ -160,25 +182,35 @@ def sekvens():
         if selected_sentences:
             session['selected_sentences'] = selected_sentences
             return redirect(url_for('parametre'))
-        
         else:
             selected_sentences = tema
             session['selected_sentences'] = selected_sentences
             return redirect(url_for('parametre'))
-        # Prosesser valgte setninger
 
-    return render_template('sekvens.html',title="sekvens", sekvens_med_score=sekvens_med_score)
+    return render_template('sekvens.html', title="sekvens", sekvens_med_score=sekvens_med_score)
+
    
 
 
 #Parametre (litt flere valg for brukeren)
 @app.route('/parametre', methods=['GET','POST'])
 def parametre():
-    if request.method == 'POST':
-        session['antall_ord'] = request.form.get('textarea')
-        session['artikkel_stil'] = request.form.get('textarea_2')
-        return redirect(url_for('artikkel'))
+    # Clear ut antall ord og artikkel stil, hvis det er noe her fra før
+    session['antall_ord'] = None
+    session['artikkel_stil'] = None
 
+    if request.method == 'POST':
+        antall_ord = request.form.get('textarea', '').strip()
+        artikkel_stil = request.form.get('textarea_2', '').strip()
+
+        if not antall_ord or not artikkel_stil:
+            flash('Vennligst fyll ut begge feltene før du går videre.', 'error')
+            return redirect(url_for('parametre'))
+
+        session['antall_ord'] = antall_ord
+        session['artikkel_stil'] = artikkel_stil
+
+        return redirect(url_for('artikkel'))
 
     return render_template('parametre.html')
 

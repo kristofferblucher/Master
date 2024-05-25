@@ -55,6 +55,15 @@
 		<input type="submit" value="Generer artikkel" id="myButton" class="myButton"> 
     </form>
 
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert" id="flash-message2">
+            {{message}}  
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button> 
+          </div>
+          {% endfor %}
+
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
