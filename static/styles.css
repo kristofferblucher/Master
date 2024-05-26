@@ -20,6 +20,32 @@
 
 }
 
+.copyButton{
+    background-color: rgba(25, 23, 23, 0.863);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    width: 55px; 
+    height: 40px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.copyButton:hover {
+    color: rgb(60, 57, 57);
+    background-color: rgb(150, 144, 144);
+    border-radius: 8px;
+
+}
+
 .navigation-buttons {
     position: absolute; /* Positions the div relative to the nearest positioned ancestor */
     top: 75px; /* Adjust this value based on the height of your navbar */
@@ -49,7 +75,7 @@
 
 #button-vis-engelsk {
     position: absolute;
-    top: 180px;
+    top: 140px;
     right: 200px;
 
 }

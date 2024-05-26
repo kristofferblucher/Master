@@ -1,55 +1,62 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1> Her kan du sjekke den engelske versjonen av teksten. <br>
-    Klikk på "vis engelsk versjon", og huk av om du ønsker å benytte deg av noen av disse.  <br> <br> 
+<h1> Her er dine valgte setninger:
 </h1>
-
 
 <div class="navigation-buttons">
     <button data-url="{{ url_for('setninger') }}" class="btn btn-light" id="goBack">
         <i class="fas fa-arrow-left"></i>
     </button>
-    <span class="navigation-text">(4/5)</span>
+    <span class="navigation-text">(4/4)</span>
 </div>
 
 <button id="button-vis-engelsk" class="myButton" onclick="toggleLanguage()"> Vis engelsk versjon</button> 
 
-<br> 
+<br> <br>
 
 <link rel="stylesheet" href="/static/styles.css">
 
+<script>
+    function copyToClipboard(elementId) {
+        const sentenceElement = document.getElementById(elementId);
+        const range = document.createRange();
+        range.selectNode(sentenceElement);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+        alert("Copied the text: " + sentenceElement.textContent);
+    }
+</script>
 
 <form method="post">
     <div class="sentences-container" id="sentence-container_no">
         {% for sentence, score in sekvens_med_score %}
-            <div class="sentence" draggable="true">
-                <span class="sentence-text" contenteditable="true">{{ sentence }}</span>
+            <div class="sentence">
+                <span class="sentence-text" id="sentence_no_{{ loop.index }}">{{ sentence }}</span>
                 <span class="score">Argument-kvalitet: {{ score }}</span>
                 <span id="info-icon" data-toggle="tooltip" data-placement="right" title="Argument-kvalitet er en score for kvaliteten til setningen basert på struktur, klarhet og relevans til temaet. 1.0 er den høyeste og beste scoren, mens 0,0 er den laveste og dårligste."><i class="fas fa-info-circle"></i></span>
-                <input type="checkbox" id="checkbox-no-{{ loop.index }}" name="sentence" value="{{ sentence }}|{{ score }}" class="sentence-checkbox" checked="true">
+                <button type="button" class="copyButton" onclick="copyToClipboard('sentence_no_{{ loop.index }}')"><i class="fas fa-clipboard"></i></button>
             </div>
         {% endfor %}
     </div>
 
     <div class="sentences-container" id="sentence-container_en" style="display:none;">
         {% for sentence, score in sekvens_med_score_en %}
-            <div class="sentence" draggable="true">
-                <span class="sentence-text" contenteditable="true">{{ sentence }}</span>
+            <div class="sentence">
+                <span class="sentence-text" id="sentence_en_{{ loop.index }}">{{ sentence }}</span>
                 <span class="score">Argument-kvalitet: {{ score }}</span>
                 <span id="info-icon" data-toggle="tooltip" data-placement="right" title="Argument-kvalitet er en score for kvaliteten til setningen basert på struktur, klarhet og relevans til temaet. 1.0 er den høyeste og beste scoren, mens 0,0 er den laveste og dårligste."><i class="fas fa-info-circle"></i></span>
-                <input type="checkbox" id="checkbox-{{ loop.index }}" name="sentence" value="{{ sentence }}|{{ score }}" class="sentence-checkbox" checked="true">
+                <button type="button" class="copyButton" onclick="copyToClipboard('sentence_en_{{ loop.index }}')"><i class="fas fa-clipboard"></i></button>
             </div>
         {% endfor %}
     </div>
     
 
     <br>
-
-    <input type="submit" id="myButton" value="Bekreft valg" class="myButton">
 </form>
 <br>
-
 
 <style>
     h1 { margin: 25px; font-size: 35px; }
