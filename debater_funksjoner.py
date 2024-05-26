@@ -111,7 +111,7 @@ def index_searcher(dc,topic,query_size):
     # Check the number of evidences
     if len(evidences) <= 0 and query_size == 20:  # Ensure this adjustment happens only once
         print("Increasing query size due to low evidence count...")
-        return index_searcher(dc, topic, query_size=50)  # Recursively call the function with a larger query size
+        return index_searcher(dc, topic, query_size=450)  # Recursively call the function with a larger query size
         
     
     return evidences

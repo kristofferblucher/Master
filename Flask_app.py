@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import openai
 import os
-from funksjoner import generate_article, translate_to_english, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english, finn_bakgrunnsinfo,legg_til_chatgpt
+from funksjoner import translate_to_english, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english, finn_bakgrunnsinfo,legg_til_chatgpt, translate_list_with_score_to_english
 from debater_funksjoner import wiki_term_extractor,index_searcher, get_argument_scores
 from debater_python_api.api.debater_api import DebaterApi
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -100,44 +100,64 @@ def setninger():
     
 
     selected_sentences= []
+    selected_sentences_with_scores = []
 
     if request.method == 'POST':
-        selected_sentences = request.form.getlist('sentence_name')
-        print('VALGTE SETNINGER:', selected_sentences)
-        engelske_setninger = translate_list_to_english(selected_sentences)
-        session['selected_sentences'] = engelske_setninger
-        
-        if selected_sentences:
-            session['selected_sentences'] = engelske_setninger
-            return redirect(url_for('sekvens'))
-        
-        else:
-            selected_sentences = tema
-            session['selected_sentences'] = engelske_setninger
-            return redirect(url_for('sekvens'))
+        try:
+            selected_sentences = request.form.getlist('sentence_name')
+            for index, sentence in enumerate(selected_sentences):
+                score_key = f'sentence_score_{index + 1}'
+                score = request.form.get(score_key)
+                selected_sentences_with_scores.append((sentence, score))
+
+            print('VALGTE SETNINGER MED SCORE:', selected_sentences_with_scores)
+            session['selected_sentences'] = selected_sentences_with_scores
+            
+            if selected_sentences_with_scores:
+                session['selected_sentences'] = selected_sentences_with_scores
+                return redirect(url_for('sekvens'))
+            
+            else:
+                selected_sentences_with_scores = tema
+                session['selected_sentences'] = selected_sentences_with_scores
+                return redirect(url_for('sekvens'))
+            
+        except: 
+            flash('Vennligst velg minst én setning.', 'error')
+            return redirect(url_for('setninger'))
         # Prosesser valgte setninger
 
-    return render_template('setninger.html', norske_setninger_med_score=setninger_sortert, selected_sentences=selected_sentences)
+    return render_template('setninger.html', norske_setninger_med_score=setninger_sortert, selected_sentences=selected_sentences_with_scores)
 
 @app.route('/sekvens', methods=['GET','POST'])
 def sekvens():
     
     selected_sentences = session.get('selected_sentences',[])
-
-
     tema = session.get('topic',[])
 
-    print(selected_sentences)
+    print("Her er de valgte setningene fra setninger123:", selected_sentences)
+
+    #Oversett for å finne engelsk versjon
+    if 'engelske_setninger' not in session:
+        engelske_setninger = translate_list_with_score_to_english(selected_sentences)
+        session['engelske setninger'] = engelske_setninger
+        engelske_setninger_med_score = engelske_setninger
+        print("123ENG MED SCORE:", engelske_setninger_med_score)
+
+    if 'engelske_setninger' in session:
+        engelske_setninger_med_score = session.get('engelske_setninger',[])
+        print("456ENG MED SCORE:", engelske_setninger_med_score)
+
 
     print("ALLE SETNINGENE:",selected_sentences)
-    valgte_setninger_en = get_argument_scores(selected_sentences,tema)
-    valgte_setninger = translate_tuple_norwegian(valgte_setninger_en)
+    #valgte_setninger_en = get_argument_scores(selected_sentences,tema)
+    #valgte_setninger = translate_tuple_norwegian(valgte_setninger_en)
     
     #Sekvens med score både engelsk og norsk
-    sekvens_med_score_en = [(sentence, score) for sentence, score in valgte_setninger_en]
+    sekvens_med_score_en = [(sentence, score) for sentence, score in engelske_setninger_med_score]
     session['sekvens_med_score_en'] = sekvens_med_score_en
 
-    sekvens_med_score = [(sentence, score) for sentence, score in valgte_setninger]
+    sekvens_med_score = [(sentence, score) for sentence, score in selected_sentences]
     session['sekvens_med_score'] = sekvens_med_score
 
     print(sekvens_med_score)

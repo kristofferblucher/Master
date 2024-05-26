@@ -215,7 +215,7 @@ def forbedre_med_chatgpt(setning):
                  Make sure that the sentences makes sense for them, giving them some type of context. Maximum 4 sentences.  """
          
          response = openai.chat.completions.create(
-             model="gpt-4o",  # valgte gpt modellen
+             model="gpt-4",  # valgte gpt modellen
              messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": setning},
@@ -232,5 +232,30 @@ def forbedre_med_chatgpt(setning):
 # def sjekk_om_gyldig_ord(ord):
 #     sjekk = enchant.Dict("nb_NO")
 #     return sjekk.check(ord)
+
+import openai
+
+def translate_list_with_score_to_english(norske_setninger):
+    translations_list = []
+
+    for tekst, score in norske_setninger:
+        try:
+            response = openai.chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a translation assistant. Translate from Norwegian to English."},
+                    {"role": "user", "content": tekst}
+                ]
+            )
+            
+            translation = response.choices[0].message.content
+            translations_list.append((translation, score))
+
+        except Exception as e:
+            print(f"An error occurred while translating '{tekst}': {e}")
+            translations_list.append((tekst, score))  # Fallback to original sentence in case of error
+
+    return translations_list
+
 
 
