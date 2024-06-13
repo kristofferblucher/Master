@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", function() {
-    // Hide the loading screen once the page is fully loaded
+    // Ta vekk loading screen når alt er lastet
     window.onload = function() {
         document.getElementById('loading').style.display = 'none';
     };

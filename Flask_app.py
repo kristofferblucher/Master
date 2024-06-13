@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import openai
 import os
-from funksjoner import translate_to_english, translate_tuple_norwegian, translate_to_norwegian, split_sentences, translate_list_to_english, finn_bakgrunnsinfo,legg_til_chatgpt, translate_list_with_score_to_english
+from funksjoner import translate_to_english, translate_tuple_norwegian, translate_to_norwegian, finn_bakgrunnsinfo,legg_til_chatgpt, translate_list_with_score_to_english
 from debater_funksjoner import wiki_term_extractor,index_searcher, get_argument_scores
 from debater_python_api.api.debater_api import DebaterApi
 from debater_python_api.api.sentence_level_index.client.sentence_query_base import SimpleQuery
@@ -150,8 +150,6 @@ def sekvens():
 
 
     print("ALLE SETNINGENE:",selected_sentences)
-    #valgte_setninger_en = get_argument_scores(selected_sentences,tema)
-    #valgte_setninger = translate_tuple_norwegian(valgte_setninger_en)
     
     #Sekvens med score både engelsk og norsk
     sekvens_med_score_en = [(sentence, score) for sentence, score in engelske_setninger_med_score]
@@ -189,18 +187,6 @@ def likte_setninger():
     likte_setninger_med_score = selected_sentences
 
     print("12230:FADADF",selected_sentences)
-
-
-
-    # #Pass på at de er på engelsk, slik at de kan få argument-score
-    # likte_setninger_engelsk = translate_list_to_english(selected_sentences)
-    # valgte_setninger_en = get_argument_scores(likte_setninger_engelsk,tema)
-
-
-    # #Oversett tuppel med score til norsk igjen
-    # valgte_setninger = translate_tuple_norwegian(valgte_setninger_en)
-
-    # sekvens_med_score = [(sentence, score) for sentence, score in valgte_setninger]
     
     return render_template('likte_setninger.html', selected_sentences=selected_sentences, likte_setninger_med_score=likte_setninger_med_score)
 

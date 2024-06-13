@@ -16,7 +16,7 @@ def get_argument_scores(arguments_list, topic):
         # Hent evidence scores
         argument_quality_score = debater_api.get_argument_quality_client().run(sentence_topic_dicts)
 
-        # Process and return the results
+        # Prosesser og returner resultat
         results = []
         for sentence, argument_quality_score in zip(sentence_topic_dicts, argument_quality_score):
             results.append((sentence['sentence'], round(argument_quality_score, 2)))
@@ -27,7 +27,7 @@ def get_argument_scores(arguments_list, topic):
         return []
 
 
-#Extracting wikified titles
+#Hent wikified titles
 
 def wiki_term_extractor(sentences): 
 
@@ -108,10 +108,10 @@ def index_searcher(dc,topic,query_size):
     evidences = [candidates_list[i] for i in range(len(evidence_scores)) if evidence_scores[i] > evidence_threshold]
     print('Number of evidences: {}'.format(len(evidences)))
     
-    # Check the number of evidences
-    if len(evidences) <= 0 and query_size == 20:  # Ensure this adjustment happens only once
+    # Sjekk antall evidences
+    if len(evidences) <= 3 and query_size == 20:  
         print("Increasing query size due to low evidence count...")
-        return index_searcher(dc, topic, query_size=450)  # Recursively call the function with a larger query size
+        return index_searcher(dc, topic, query_size=450)  # Øk query-size hvis færre enn antallet
         
     
     return evidences

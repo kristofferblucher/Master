@@ -1,16 +1,16 @@
 
 .myButton{
     background-color: rgba(25, 23, 23, 0.863); 
-    color: white; /* White text */
-    padding: 10px 28px; /* Top and bottom padding of 15px, left and right of 32px */
-    text-align: center; /* Centered text */
-    text-decoration: none; /* No underline */
-    display: inline-block; /* Inline-block display */
-    font-size: 16px; /* Font size */
-    margin: 4px 2px; /* Margin around the button */
+    color: white; 
+    padding: 10px 28px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 16px; 
+    margin: 4px 2px; 
     margin-top: 1rem;
-    cursor: pointer; /* Pointer cursor on hover */
-    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; 
+    border-radius: 8px; 
 }
 
 .myButton:hover {
@@ -81,8 +81,8 @@
 }
 
 #startside:hover {
-    color: rgb(60, 57, 57); /* Change the text color on hover */
-    background-color: rgb(150, 144, 144); /* Change the background color on hover */
+    color: rgb(60, 57, 57); /* Endre tekstfarge når hover */
+    background-color: rgb(150, 144, 144); /* Endre bakgrunn når hover */
     border-radius: 5px;
 }
 
