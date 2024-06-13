@@ -27,7 +27,6 @@ def startside():
     return render_template('startside.html')
 
 
-
 #Side for å velge tema
 @app.route('/verktøy',methods=['GET', 'POST'])
 def støtteverktøy():
@@ -142,14 +141,10 @@ def sekvens():
         engelske_setninger = translate_list_with_score_to_english(selected_sentences)
         session['engelske setninger'] = engelske_setninger
         engelske_setninger_med_score = engelske_setninger
-        print("123ENG MED SCORE:", engelske_setninger_med_score)
 
     if 'engelske_setninger' in session:
         engelske_setninger_med_score = session.get('engelske_setninger',[])
-        print("456ENG MED SCORE:", engelske_setninger_med_score)
 
-
-    print("ALLE SETNINGENE:",selected_sentences)
     
     #Sekvens med score både engelsk og norsk
     sekvens_med_score_en = [(sentence, score) for sentence, score in engelske_setninger_med_score]
@@ -186,7 +181,6 @@ def likte_setninger():
     selected_sentences = session.get('sequence_sentences')
     likte_setninger_med_score = selected_sentences
 
-    print("12230:FADADF",selected_sentences)
     
     return render_template('likte_setninger.html', selected_sentences=selected_sentences, likte_setninger_med_score=likte_setninger_med_score)
 
